@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Opinion avatar 3">
+  <rect width="128" height="128" rx="64" fill="#e3efdc"/>
+  <circle cx="64" cy="48" r="24" fill="#9db48f"/>
+  <path d="M28 112c7-20 25-31 36-31s29 11 36 31" fill="#8aa27d"/>
+  <circle cx="64" cy="64" r="58" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="4"/>
+</svg>
