@@ -343,40 +343,75 @@ class HomeController extends Controller
 
     private function fallbackVideoStories(string $locale): Collection
     {
-        $items = [
-            [
-                'title' => 'سمیع سادات: طالبان ثبات نیاورده‌اند؛ جبهه متحد به مبارزه ادامه می‌دهد',
-                'video_url' => 'https://www.youtube.com/watch?v=L1FGKggNk34',
-            ],
-            [
-                'title' => 'علی رادمهر: فرهنگ هزاره فراتر از مرزها گسترش یافته است',
-                'video_url' => 'https://www.youtube.com/watch?v=LDg4tMYYAQc',
-            ],
-            [
-                'title' => 'روز فرهنگ هزاره، با برگزاری برنامه‌ای ویژه تجلیل کرد.',
-                'video_url' => 'https://www.youtube.com/watch?v=A2tBgDG9do4',
-            ],
-            [
-                'title' => 'قاری عیسی محمدی در ویدیوی تازه از چهره‌های حکومت پیشین جمهوریت انتقاد کرد.',
-                'video_url' => 'https://www.youtube.com/watch?v=RMoQHz471a8',
-            ],
-            [
-                'title' => 'عزت‌الله قربان‌زاده: از شاگردی تا ایجاد منبع درآمد برای چند خانواده',
-                'video_url' => 'https://www.youtube.com/watch?v=o5RSt23u0E8',
-            ],
-            [
-                'title' => 'محمد طاهر رزمجو',
-                'video_url' => 'https://www.youtube.com/watch?v=CL3QbjUOEOA',
-            ],
-            [
-                'title' => 'یک عضو تاجیک‌تبار طالبان با لحنی تند از تبعیض و بی‌عدالتی در ساختار قدرت این گروه انتقاد کرده',
-                'video_url' => 'https://www.youtube.com/watch?v=ElUYQGzNH9Y',
-            ],
-            [
-                'title' => 'نسخه‌ای از معاهده دیورند در کتابخانه بریتانیا',
-                'video_url' => 'https://www.youtube.com/watch?v=mEeJeMxzkgU',
-            ],
-        ];
+        $items = $locale === 'fa'
+            ? [
+                [
+                    'title' => 'سمیع سادات: طالبان ثبات نیاورده‌اند؛ جبهه متحد به مبارزه ادامه می‌دهد',
+                    'video_url' => 'https://www.youtube.com/watch?v=L1FGKggNk34',
+                ],
+                [
+                    'title' => 'علی رادمهر: فرهنگ هزاره فراتر از مرزها گسترش یافته است',
+                    'video_url' => 'https://www.youtube.com/watch?v=LDg4tMYYAQc',
+                ],
+                [
+                    'title' => 'روز فرهنگ هزاره، با برگزاری برنامه‌ای ویژه تجلیل کرد.',
+                    'video_url' => 'https://www.youtube.com/watch?v=A2tBgDG9do4',
+                ],
+                [
+                    'title' => 'قاری عیسی محمدی در ویدیوی تازه از چهره‌های حکومت پیشین جمهوریت انتقاد کرد.',
+                    'video_url' => 'https://www.youtube.com/watch?v=RMoQHz471a8',
+                ],
+                [
+                    'title' => 'عزت‌الله قربان‌زاده: از شاگردی تا ایجاد منبع درآمد برای چند خانواده',
+                    'video_url' => 'https://www.youtube.com/watch?v=o5RSt23u0E8',
+                ],
+                [
+                    'title' => 'محمد طاهر رزمجو',
+                    'video_url' => 'https://www.youtube.com/watch?v=CL3QbjUOEOA',
+                ],
+                [
+                    'title' => 'یک عضو تاجیک‌تبار طالبان با لحنی تند از تبعیض و بی‌عدالتی در ساختار قدرت این گروه انتقاد کرده',
+                    'video_url' => 'https://www.youtube.com/watch?v=ElUYQGzNH9Y',
+                ],
+                [
+                    'title' => 'نسخه‌ای از معاهده دیورند در کتابخانه بریتانیا',
+                    'video_url' => 'https://www.youtube.com/watch?v=mEeJeMxzkgU',
+                ],
+            ]
+            : [
+                [
+                    'title' => 'Samim Sadat: Taliban have not brought stability; united front continues the fight',
+                    'video_url' => 'https://www.youtube.com/watch?v=L1FGKggNk34',
+                ],
+                [
+                    'title' => 'Ali Radmehr: Hazaras’ culture has grown beyond borders',
+                    'video_url' => 'https://www.youtube.com/watch?v=LDg4tMYYAQc',
+                ],
+                [
+                    'title' => 'Hazara Culture Day celebrated with a special event.',
+                    'video_url' => 'https://www.youtube.com/watch?v=A2tBgDG9do4',
+                ],
+                [
+                    'title' => 'Qari Isa Mohammadi criticizes former republican figures in new video.',
+                    'video_url' => 'https://www.youtube.com/watch?v=RMoQHz471a8',
+                ],
+                [
+                    'title' => 'Izzatullah Qurbanzadeh: from apprenticeship to creating income for several families',
+                    'video_url' => 'https://www.youtube.com/watch?v=o5RSt23u0E8',
+                ],
+                [
+                    'title' => 'Mohammad Taher Razmjou',
+                    'video_url' => 'https://www.youtube.com/watch?v=CL3QbjUOEOA',
+                ],
+                [
+                    'title' => 'A Tajik Taliban member sharply criticizes discrimination and injustice in the group’s power structure',
+                    'video_url' => 'https://www.youtube.com/watch?v=ElUYQGzNH9Y',
+                ],
+                [
+                    'title' => 'A copy of the Durand Agreement in the British Library',
+                    'video_url' => 'https://www.youtube.com/watch?v=mEeJeMxzkgU',
+                ],
+            ];
 
         return collect($items)->map(function (array $item, int $index) use ($locale) {
             $videoId = trim((string) parse_url($item['video_url'], PHP_URL_QUERY));

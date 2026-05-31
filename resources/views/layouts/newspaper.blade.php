@@ -776,7 +776,7 @@
         .section-heading h2::after {
             content: "";
             position: absolute;
-            left: 0;
+            inset-inline-start: 0;
             bottom: 0;
             width: 76px;
             height: 3px;
@@ -1022,14 +1022,14 @@
         .video-section::before {
             width: 540px;
             height: 540px;
-            left: -220px;
+            inset-inline-start: -220px;
             bottom: -250px;
         }
 
         .video-section::after {
             width: 620px;
             height: 620px;
-            right: -300px;
+            inset-inline-end: -300px;
             top: -190px;
         }
 
@@ -1059,7 +1059,7 @@
             cursor: pointer;
             display: grid;
             gap: 8px;
-            text-align: left;
+            text-align: start;
             width: 100%;
         }
 
