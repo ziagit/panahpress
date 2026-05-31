@@ -27,11 +27,9 @@
                             </div>
                         </div>
 
-                        @if($post->image)
-                            <a href="{{ route('posts.show', ['locale' => $locale, 'post' => $post->slug]) }}" class="category-item__media">
-                                <img src="{{ asset('storage/'.$post->image) }}" alt="{{ $post->title($locale) }}">
-                            </a>
-                        @endif
+                        <a href="{{ route('posts.show', ['locale' => $locale, 'post' => $post->slug]) }}" class="category-item__media">
+                            <img src="{{ $post->imageUrl() }}" alt="{{ $post->title($locale) }}">
+                        </a>
                     </article>
                 @empty
                     <div class="hero-card" style="grid-column: 1 / -1;">
@@ -122,11 +120,9 @@
                     <div class="latest-list">
                         @foreach($latestPosts as $latestPost)
                             <a class="latest-item" href="{{ route('posts.show', ['locale' => $locale, 'post' => $latestPost->slug]) }}">
-                                @if($latestPost->image)
-                                    <div class="latest-item__media">
-                                        <img src="{{ asset('storage/'.$latestPost->image) }}" alt="{{ $latestPost->title($locale) }}">
-                                    </div>
-                                @endif
+                                <div class="latest-item__media">
+                                    <img src="{{ $latestPost->imageUrl() }}" alt="{{ $latestPost->title($locale) }}">
+                                </div>
                                 <div>
                                     <div class="latest-item__meta">
                                         {{ $latestPost->published_at?->translatedFormat('M d, Y') }} · {{ $category->name($locale) }}

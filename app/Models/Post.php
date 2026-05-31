@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\App as AppFacade;
+use Illuminate\Support\Facades\Storage;
 
 #[Fillable(['title_en', 'title_fa', 'content_en', 'content_fa', 'slug', 'published_at', 'user_id', 'category_id', 'image', 'video_url'])]
 class Post extends Model
@@ -49,5 +50,14 @@ class Post extends Model
         $locale = $locale ?: AppFacade::getLocale();
 
         return $this->{'content_'.$locale} ?: $this->content_en;
+    }
+
+    public function imageUrl(int $index = 0): string
+    {
+        if ($this->image && Storage::disk('public')->exists($this->image)) {
+            return asset('storage/'.$this->image);
+        }
+
+        return asset('images/home/placeholder-01.svg');
     }
 }

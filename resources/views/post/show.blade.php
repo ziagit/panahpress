@@ -16,15 +16,11 @@
         <meta property="og:title" content="{{ $post->title($locale) }}">
         <meta property="og:description" content="{{ $caption }}">
         <meta property="og:url" content="{{ $shareUrl }}">
-        @if($post->image)
-            <meta property="og:image" content="{{ asset('storage/'.$post->image) }}">
-        @endif
+        <meta property="og:image" content="{{ $post->imageUrl() }}">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{{ $post->title($locale) }}">
         <meta name="twitter:description" content="{{ $caption }}">
-        @if($post->image)
-            <meta name="twitter:image" content="{{ asset('storage/'.$post->image) }}">
-        @endif
+        <meta name="twitter:image" content="{{ $post->imageUrl() }}">
     @endpush
 
     <section class="post-page">
@@ -35,7 +31,13 @@
                 </div>
                 <h1 class="post-title">{{ $post->title($locale) }}</h1>
                 <div class="post-byline">
-                    <span>{{ __('messages.by') }} {{ $post->user?->name ?? 'Staff Reporter' }}</span>
+                    @php
+                        $authorName = $post->user?->name;
+                        $authorName = $authorName && $authorName !== 'PanahPress Admin'
+                            ? $authorName
+                            : 'PANAHPRESS';
+                    @endphp
+                    <span>{{ __('messages.by') }} {{ $authorName }}</span>
                     <span>{{ $post->published_at?->translatedFormat('M d, Y') }}</span>
                 </div>
             </div>
@@ -50,9 +52,7 @@
             </div>
 
             <figure class="post-featured">
-                @if($post->image)
-                    <img class="post-image" src="{{ asset('storage/'.$post->image) }}" alt="{{ $post->title($locale) }}">
-                @endif
+                            <img class="post-image" src="{{ $post->imageUrl() }}" alt="{{ $post->title($locale) }}">
                 <figcaption class="post-caption">
                     {{ $caption }}
                 </figcaption>
@@ -77,9 +77,7 @@
                         @foreach($relatedCards as $article)
                             <article class="post-related-card">
                                 <a class="post-related-card__media" href="{{ route('posts.show', ['locale' => $locale, 'post' => $article->slug]) }}">
-                                    @if($article->image)
-                                        <img src="{{ asset('storage/'.$article->image) }}" alt="{{ $article->title($locale) }}">
-                                    @endif
+                                                            <img src="{{ $article->imageUrl() }}" alt="{{ $article->title($locale) }}">
                                 </a>
                                 <div class="post-related-card__kicker">
                                     {{ $article->category?->name($locale) ?? __('messages.posts') }}
@@ -125,9 +123,7 @@
 
                 @if($sidebarLead)
                     <a class="post-sidebar__latest-featured" href="{{ route('posts.show', ['locale' => $locale, 'post' => $sidebarLead->slug]) }}">
-                        @if($sidebarLead->image)
-                            <img src="{{ asset('storage/'.$sidebarLead->image) }}" alt="{{ $sidebarLead->title($locale) }}">
-                        @endif
+                        <img src="{{ $sidebarLead->imageUrl() }}" alt="{{ $sidebarLead->title($locale) }}">
                         <div class="post-sidebar__latest-featured-title">{{ $sidebarLead->title($locale) }}</div>
                         <div class="post-sidebar__latest-featured-excerpt">
                             {{ \Illuminate\Support\Str::limit(strip_tags($sidebarLead->content($locale)), 110) }}
