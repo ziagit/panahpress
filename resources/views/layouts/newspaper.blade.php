@@ -379,7 +379,7 @@
         .main-nav__dropdown {
             position: absolute;
             top: calc(100% - 2px);
-            left: 0;
+            inset-inline-start: 0;
             min-width: 260px;
             padding-top: 8px;
             opacity: 0;
@@ -2642,7 +2642,7 @@
                         }
                     } catch (error) {
                         if (status) {
-                            status.textContent = '{{ __('messages.newsletter_request_failed') }}';
+                            status.textContent = `{{ __('messages.newsletter_request_failed') }}`;
                             status.classList.add('is-error');
                         }
                     } finally {
