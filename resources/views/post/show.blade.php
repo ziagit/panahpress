@@ -9,6 +9,9 @@
         $shareUrl = route('posts.show', ['locale' => $locale, 'post' => $post->slug]);
         $shareUrlEncoded = urlencode($shareUrl);
         $shareTitle = urlencode($post->title($locale));
+        $title = $post->title($locale) . ' | ' . __('messages.site_name');
+        $metaDescription = $caption;
+        $canonicalUrl = $shareUrl;
     @endphp
 
     @push('head')

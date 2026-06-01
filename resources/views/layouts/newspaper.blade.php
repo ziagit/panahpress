@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? __('messages.site_name') }}</title>
+    <meta name="description" content="{{ $metaDescription ?? __('messages.tagline') }}">
+    <link rel="canonical" href="{{ $canonicalUrl ?? url()->current() }}">
+    <meta property="og:site_name" content="{{ __('messages.site_name') }}">
     @stack('head')
     <style>
         :root {
@@ -1324,12 +1327,14 @@
             margin-top: 0.9rem;
             overflow-x: auto;
             white-space: nowrap;
+            width: 100%;
         }
 
         .post-share-row > div,
         .post-share,
         .post-tools {
             min-width: 0;
+            flex-shrink: 0;
         }
 
         .post-share {

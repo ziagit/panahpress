@@ -1,7 +1,26 @@
 @extends('layouts.newspaper')
 
+@php
+    $title = $category->name($locale) . ' | ' . __('messages.site_name');
+    $metaDescription = __('messages.tagline');
+    $canonicalUrl = route('categories.show', ['locale' => $locale, 'category' => $category]);
+@endphp
+
+@push('head')
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ $category->name($locale) }} | {{ __('messages.site_name') }}">
+    <meta property="og:description" content="{{ $metaDescription }}">
+    <meta property="og:url" content="{{ $canonicalUrl }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $category->name($locale) }} | {{ __('messages.site_name') }}">
+    <meta name="twitter:description" content="{{ $metaDescription }}">
+@endpush
+
 @section('content')
     <section class="category-page">
+        <header class="category-header">
+            <h1>{{ $category->name($locale) }}</h1>
+        </header>
         <div class="category-layout">
             <div class="category-feed">
                 @forelse($posts as $post)
