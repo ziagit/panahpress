@@ -12,8 +12,8 @@
             </div>
         </div>
 
-        <div class="auth-layout" style="grid-template-columns: repeat(2, minmax(0, 1fr));">
-            <div class="auth-card">
+        <div class="auth-layout">
+            <div class="auth-card" style="box-shadow:none;">
                 <h2 style="margin-top:0;">{{ __('messages.update_profile') }}</h2>
                 <form method="POST" action="{{ route('admin.profile.update', ['locale' => $locale]) }}">
                     @csrf
@@ -35,7 +35,7 @@
                 </form>
             </div>
 
-            <div class="auth-card">
+            <div class="auth-card" style="box-shadow:none;">
                 <h2 style="margin-top:0;">{{ __('messages.change_password') }}</h2>
                 <form method="POST" action="{{ route('admin.profile.password', ['locale' => $locale]) }}">
                     @csrf

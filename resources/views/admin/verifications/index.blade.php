@@ -13,20 +13,22 @@
             </div>
         </div>
 
-        <form method="GET" action="{{ route('admin.verifications.index', ['locale' => $locale]) }}" class="panel-card" style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-bottom:1rem;">
-            <input type="search" name="search" value="{{ $search }}" placeholder="{{ __('messages.search') }}" style="flex:1; min-width:240px;" />
+        <form method="GET" action="{{ route('admin.verifications.index', ['locale' => $locale]) }}" style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-bottom:1rem;">
+            <div class="form-field" style="flex:1 1 240px; margin-bottom:0;">
+                <label for="search">{{ __('messages.search') }}</label>
+                <input id="search" type="search" name="search" value="{{ $search }}" placeholder="{{ __('messages.search') }}" />
+            </div>
             <button type="submit" class="button">{{ __('messages.search') }}</button>
             @if($search !== '')
                 <a href="{{ route('admin.verifications.index', ['locale' => $locale]) }}" class="text-muted">Clear</a>
             @endif
         </form>
 
-        <div class="table-card">
-            <div class="table-wrap">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>{{ __('messages.card_id') }}</th>
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{{ __('messages.card_id') }}</th>
                             <th>{{ __('messages.full_name') }}</th>
                             <th>{{ __('messages.occupation') }}</th>
                             <th>{{ __('messages.birth_date') }}</th>

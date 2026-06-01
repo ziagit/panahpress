@@ -21,14 +21,34 @@
             </article>
 
             @php
-                $heroVideo = $videoStories->first() ?? $heroRail->first();
-                $heroVideoUrl = data_get($heroVideo, 'video_url', '');
-                $heroVideoPlayerUrl = $heroVideoUrl
-                    ? $heroVideoUrl.(str_contains($heroVideoUrl, '?') ? '&' : '?').'autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&fs=0&enablejsapi=1'
-                    : '';
+                $heroVideos = collect($videoStories)
+                    ->filter(fn($story) => data_get($story, 'video_url'))
+                    ->map(function ($story) {
+                        $videoUrl = data_get($story, 'video_url', '');
+                        $playerUrl = $videoUrl.(str_contains($videoUrl, '?') ? '&' : '?').'autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&fs=0&enablejsapi=1';
+
+                        return [
+                            'title' => data_get($story, 'title', ''),
+                            'video_url' => $playerUrl,
+                            'image' => data_get($story, 'image', ''),
+                        ];
+                    })
+                    ->values();
+
+                $heroVideo = $heroVideos->first();
+                $heroVideoPlayerUrl = data_get($heroVideo, 'video_url', '');
             @endphp
 
-            <aside class="hero-live-card" aria-label="{{ __('messages.live_tv') }}">
+            @php
+                $heroVideosJson = htmlspecialchars(json_encode($heroVideos->toArray(), JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
+            @endphp
+            <aside
+                class="hero-live-card"
+                aria-label="{{ __('messages.live_tv') }}"
+                data-hero-videos="{{ $heroVideosJson }}"
+                data-unmute-label="{{ __('messages.unmute') }}"
+                data-mute-label="{{ __('messages.mute') }}"
+            >
                 <div class="hero-live-card__body">
                     <div class="hero-live-card__label">{{ __('messages.live_tv') }}</div>
                     <div class="hero-live-card__media">
@@ -57,6 +77,20 @@
                             <img src="{{ data_get($heroVideo, 'image', '') }}" alt="{{ data_get($heroVideo, 'title', '') }}">
                         @endif
                     </div>
+
+                    @if($heroVideos->count() > 1)
+                        <div class="hero-live-card__playlist" aria-label="Live video playlist">
+                            @foreach($heroVideos as $index => $video)
+                                <button
+                                    type="button"
+                                    class="hero-live-card__playlist-item{{ $index === 0 ? ' is-active' : '' }}"
+                                    data-hero-video-index="{{ $index }}"
+                                >
+                                    {{ $video['title'] ?: __('messages.live_tv') }}
+                                </button>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             </aside>
         </section>
@@ -403,12 +437,38 @@
 
         <script>
             (() => {
+                const heroCard = document.querySelector('.hero-live-card');
                 const iframe = document.getElementById('hero-live-tv-frame');
                 const button = document.getElementById('hero-live-tv-sound');
+                const playlistButtons = Array.from(document.querySelectorAll('[data-hero-video-index]'));
+                const heroVideos = heroCard ? JSON.parse(heroCard.dataset.heroVideos || '[]') : [];
+                const labels = {
+                    unmute: (heroCard && heroCard.dataset.unmuteLabel) || 'Unmute',
+                    mute: (heroCard && heroCard.dataset.muteLabel) || 'Mute',
+                };
 
-                if (!iframe || !button) {
+                if (!iframe || !button || !heroVideos.length) {
                     return;
                 }
+
+                let activeIndex = 0;
+
+                const updatePlaylistUI = () => {
+                    playlistButtons.forEach((btn) => {
+                        const index = Number(btn.dataset.heroVideoIndex);
+                        btn.classList.toggle('is-active', index === activeIndex);
+                    });
+                };
+
+                const loadVideo = (index) => {
+                    if (index < 0 || index >= heroVideos.length || index === activeIndex) {
+                        return;
+                    }
+
+                    activeIndex = index;
+                    iframe.src = heroVideos[activeIndex].video_url;
+                    updatePlaylistUI();
+                };
 
                 const sendCommand = (command) => {
                     if (!iframe.contentWindow) {
@@ -425,10 +485,38 @@
                 const setMuted = (muted) => {
                     button.dataset.muted = muted ? 'true' : 'false';
                     button.setAttribute('aria-pressed', muted ? 'true' : 'false');
-                    button.setAttribute('aria-label', muted ? '{{ __('messages.unmute') }}' : '{{ __('messages.mute') }}');
+                    button.setAttribute('aria-label', muted ? labels.unmute : labels.mute);
                     button.querySelector('.hero-live-card__sound-icon').textContent = muted ? '🔇' : '🔊';
-                    button.querySelector('.hero-live-card__sound-label').textContent = muted ? '{{ __('messages.unmute') }}' : '{{ __('messages.mute') }}';
+                    button.querySelector('.hero-live-card__sound-label').textContent = muted ? labels.unmute : labels.mute;
                 };
+
+                playlistButtons.forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const index = Number(btn.dataset.heroVideoIndex);
+                        loadVideo(index);
+                    });
+                });
+
+                window.addEventListener('message', (event) => {
+                    let data = event.data;
+
+                    if (typeof data === 'string') {
+                        try {
+                            data = JSON.parse(data);
+                        } catch (error) {
+                            return;
+                        }
+                    }
+
+                    if (!data || data.event !== 'onStateChange') {
+                        return;
+                    }
+
+                    if (data.info === 0 && heroVideos.length > 1) {
+                        const nextIndex = (activeIndex + 1) % heroVideos.length;
+                        loadVideo(nextIndex);
+                    }
+                });
 
                 button.addEventListener('click', () => {
                     const muted = button.dataset.muted === 'true';
@@ -442,9 +530,13 @@
                     }
                 });
 
-                iframe.addEventListener?.('load', () => {
-                    sendCommand('mute');
-                });
+                if (iframe.addEventListener) {
+                    iframe.addEventListener('load', () => {
+                        sendCommand('mute');
+                    });
+                }
+
+                updatePlaylistUI();
             })();
         </script>
 

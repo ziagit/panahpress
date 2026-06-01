@@ -17,10 +17,14 @@
         <meta property="og:description" content="{{ $caption }}">
         <meta property="og:url" content="{{ $shareUrl }}">
         <meta property="og:image" content="{{ $post->imageUrl() }}">
+        <meta property="og:image:secure_url" content="{{ $post->imageUrl() }}">
+        <meta property="og:image:type" content="image/jpeg">
+        <meta property="og:image:alt" content="{{ $post->title($locale) }}">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{{ $post->title($locale) }}">
         <meta name="twitter:description" content="{{ $caption }}">
         <meta name="twitter:image" content="{{ $post->imageUrl() }}">
+        <link rel="image_src" href="{{ $post->imageUrl() }}">
     @endpush
 
     <section class="post-page">
@@ -49,6 +53,18 @@
                     <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $shareUrlEncoded }}" class="linkedin" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">in</a>
                     <a href="https://wa.me/?text={{ $shareTitle }}%20{{ $shareUrlEncoded }}" class="whatsapp" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">wa</a>
                 </div>
+
+                <div class="post-tools">
+                    <button
+                        type="button"
+                        id="post-share-copy"
+                        class="post-share-copy"
+                        data-share-url="{{ $shareUrl }}"
+                        aria-label="Copy post URL"
+                    >
+                        Copy
+                    </button>
+                </div>
             </div>
 
             <figure class="post-featured">
@@ -61,6 +77,31 @@
             <div class="post-content">
                 {!! $post->content($locale) !!}
             </div>
+
+            @push('scripts')
+                <script>
+                    (() => {
+                        const copyButton = document.getElementById('post-share-copy');
+
+                        if (!copyButton || !navigator.clipboard) {
+                            return;
+                        }
+
+                        copyButton.addEventListener('click', () => {
+                            const shareUrl = copyButton.dataset.shareUrl || window.location.href;
+
+                            navigator.clipboard.writeText(shareUrl).then(() => {
+                                copyButton.textContent = 'Copied';
+                                setTimeout(() => {
+                                    copyButton.textContent = 'Copy';
+                                }, 1500);
+                            }).catch(() => {
+                                window.prompt('Copy this URL:', shareUrl);
+                            });
+                        });
+                    })();
+                </script>
+            @endpush
 
             @if($relatedCards->isNotEmpty())
                 <section style="margin-top: 18px;">

@@ -21,7 +21,7 @@
             <div class="stat-card"><div class="label">{{ __('messages.published_at') }}</div><div class="value">{{ $statsPosts->whereNotNull('published_at')->count() }}</div></div>
         </div>
 
-        <form method="GET" action="{{ route('admin.posts.index', ['locale' => $locale]) }}" class="panel-card" style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-bottom:1rem;">
+        <form method="GET" action="{{ route('admin.posts.index', ['locale' => $locale]) }}" style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-bottom:1rem;">
             <div class="form-field" style="margin-bottom:0; flex:1 1 280px;">
                 <label for="search">{{ __('messages.search') }}</label>
                 <input id="search" type="search" name="search" value="{{ $search }}" placeholder="{{ __('messages.search_by_title') }}" />
@@ -34,12 +34,11 @@
             </div>
         </form>
 
-        <div class="table-card">
-            <div class="table-wrap">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>{{ __('messages.title_en') }}</th>
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{{ __('messages.title_en') }}</th>
                             <th>{{ __('messages.title_fa') }}</th>
                             <th>{{ __('messages.category') }}</th>
                             <th>{{ __('messages.published_at') }}</th>

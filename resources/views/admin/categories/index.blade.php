@@ -21,12 +21,11 @@
             <div class="stat-card"><div class="label">{{ __('messages.posts') }}</div><div class="value">{{ $categories->sum('posts_count') }}</div></div>
         </div>
 
-        <div class="table-card">
-            <div class="table-wrap">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Menu level</th>
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Menu level</th>
                             <th>{{ __('messages.name_en') }}</th>
                             <th>{{ __('messages.name_fa') }}</th>
                             <th>Parent</th>

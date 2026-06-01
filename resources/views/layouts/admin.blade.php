@@ -329,9 +329,32 @@
                 border-inline-end: none;
                 box-shadow: 0 12px 30px rgba(15, 23, 42, 0.04);
             }
-            .stats-grid { grid-template-columns: 1fr; }
-            .panel-header, .admin-topbar { flex-direction: column; align-items: flex-start; }
-            .panel-actions { justify-content: flex-start; }
+            .admin-nav { gap: 0.35rem; }
+            .admin-nav a,
+            .admin-nav button { padding: 0.85rem 0.9rem; }
+            .stats-grid { display: none; }
+            .panel-header,
+            .admin-topbar { flex-direction: column; align-items: flex-start; }
+            .panel-actions { justify-content: flex-start; width: 100%; }
+            .panel-actions .button { width: 100%; max-width: 320px; }
+            .auth-layout { grid-template-columns: 1fr; }
+            .sidebar-panel { padding: 1rem; }
+            .form-field input,
+            .form-field textarea,
+            .form-field select { min-width: 0; }
+            .admin-topbar .title { font-size: clamp(1.45rem, 4vw, 2rem); }
+            .admin-brand { gap: 0.5rem; }
+        }
+
+        @media (max-width: 640px) {
+            .admin-sidebar { padding: 1rem; }
+            .admin-nav a,
+            .admin-nav button { gap: 0.6rem; font-size: 0.94rem; }
+            .panel-header,
+            .admin-topbar { gap: 0.75rem; }
+            .panel-actions { flex-direction: column; align-items: stretch; }
+            .panel-actions .button { width: 100%; }
+            .post-sidebar .sidebar-panel { padding: 1rem; }
         }
     </style>
 </head>
@@ -397,5 +420,20 @@
             @yield('content')
         </main>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('form').forEach(function(form) {
+                var methodInput = form.querySelector('input[name="_method"][type="hidden"]');
+                if (methodInput && methodInput.value.toUpperCase() === 'DELETE') {
+                    form.addEventListener('submit', function(event) {
+                        var confirmed = confirm('Are you sure you want to delete this item?');
+                        if (!confirmed) {
+                            event.preventDefault();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
