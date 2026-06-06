@@ -141,11 +141,12 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        $admin = User::firstOrCreate(
+        $admin = User::updateOrCreate(
             ['email' => 'admin@panahpress.com'],
             [
                 'name' => 'PanahPress Admin',
                 'password' => Hash::make('password'),
+                'role' => 'admin',
             ]
         );
 

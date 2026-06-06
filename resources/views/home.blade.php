@@ -41,7 +41,7 @@
                     ->filter(fn($story) => data_get($story, 'video_url'))
                     ->map(function ($story) {
                         $videoUrl = data_get($story, 'video_url', '');
-                        $playerUrl = $videoUrl.(str_contains($videoUrl, '?') ? '&' : '?').'autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&fs=0&enablejsapi=1';
+                        $playerUrl = $videoUrl.(str_contains($videoUrl, '?') ? '&' : '?').'autoplay=1&mute=1&playsinline=1&controls=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&fs=1&enablejsapi=1';
 
                         return [
                             'title' => data_get($story, 'title', ''),

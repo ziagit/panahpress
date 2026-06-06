@@ -360,12 +360,20 @@
 </head>
 <body>
     @php
+        $currentUser = auth()->user();
         $adminNav = [
             ['label' => __('messages.posts'), 'route' => 'admin.posts.index'],
             ['label' => __('messages.categories'), 'route' => 'admin.categories.index'],
-            ['label' => __('messages.verifications'), 'route' => 'admin.verifications.index'],
-            ['label' => __('messages.profile'), 'route' => 'admin.profile.edit'],
         ];
+
+        if ($currentUser?->isAdmin()) {
+            $adminNav[] = ['label' => __('messages.authors'), 'route' => 'admin.authors.index'];
+            $adminNav[] = ['label' => __('messages.verifications'), 'route' => 'admin.verifications.index'];
+        }
+
+        if ($currentUser) {
+            $adminNav[] = ['label' => __('messages.profile'), 'route' => 'admin.profile.edit'];
+        }
     @endphp
     <div class="admin-shell">
         <aside class="admin-sidebar">

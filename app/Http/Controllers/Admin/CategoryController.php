@@ -41,8 +41,9 @@ class CategoryController extends Controller
     {
         $locale = $this->setLocale($request);
         $categories = Category::with(['parent'])->withCount('posts')->ordered()->get();
+        $canManageCategories = (bool) $request->user()?->isAdmin();
 
-        return view('admin.categories.index', compact('categories', 'locale'));
+        return view('admin.categories.index', compact('categories', 'locale', 'canManageCategories'));
     }
 
     public function create(Request $request)
@@ -78,6 +79,7 @@ class CategoryController extends Controller
 
     public function edit(Request $request, $locale, Category $category)
     {
+        abort_unless($request->user()?->isAdmin(), 403);
         $categories = Category::active()->roots()->ordered()->where('id', '!=', $category->id)->get();
 
         return view('admin.categories.edit', compact('category', 'locale', 'categories'));
@@ -85,12 +87,10 @@ class CategoryController extends Controller
 
     public function update(Request $request, $locale, Category $category)
     {
-        // 1. Set the locale if your helper method requires it
+        abort_unless($request->user()?->isAdmin(), 403);
+
         $locale = $this->setLocale($request);
-    
-        // 2. Your manual query is removed! $category is already loaded.
-    
-        // 3. Validate attributes (using $category->id safely)
+
         $attributes = $request->validate([
             'parent_id' => ['nullable', 'integer', 'exists:categories,id', 'not_in:'.$category->id],
             'name_en' => ['required', 'string', 'max:255', 'unique:categories,name_en,' . $category->id],
@@ -98,23 +98,23 @@ class CategoryController extends Controller
             'is_active' => ['nullable', 'boolean'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
         ]);
-    
-        // 4. Process slug and toggles
+
         $attributes['slug'] = $this->uniqueSlug($attributes['name_en'], $attributes['name_fa'], $category);
         $attributes['parent_id'] = $attributes['parent_id'] ?? null;
         $attributes['is_active'] = $request->boolean('is_active');
         $attributes['sort_order'] = $attributes['sort_order'] ?? 0;
-    
-        // 5. Update and redirect
+
         $category->update($attributes);
-    
+
         return redirect()->route('admin.categories.index', ['locale' => $locale]);
     }
 
     public function destroy(Request $request, $locale, Category $category)
     {
+        abort_unless($request->user()?->isAdmin(), 403);
+
         $category->delete();
-    
+
         return redirect()->route('admin.categories.index', ['locale' => $locale]);
     }
 }

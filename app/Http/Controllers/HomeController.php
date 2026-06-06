@@ -147,7 +147,7 @@ class HomeController extends Controller
 
     private function decorateStory(Post $post, int $index, string $locale): array
     {
-        $content = trim(strip_tags($post->content($locale) ?: ''));
+        $content = $post->plainContent($locale);
 
         return [
             'id' => $post->id,

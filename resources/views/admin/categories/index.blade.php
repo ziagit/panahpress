@@ -10,9 +10,11 @@
                 <h1>{{ __('messages.categories') }}</h1>
                 <p class="text-muted">{{ __('messages.welcome_admin') }}</p>
             </div>
-            <div class="panel-actions">
-                <a href="{{ route('admin.categories.create', ['locale' => $locale]) }}" class="button">{{ __('messages.create_category') }}</a>
-            </div>
+            @if($canManageCategories)
+                <div class="panel-actions">
+                    <a href="{{ route('admin.categories.create', ['locale' => $locale]) }}" class="button">{{ __('messages.create_category') }}</a>
+                </div>
+            @endif
         </div>
 
         <div class="stats-grid">
@@ -32,7 +34,9 @@
                             <th>{{ __('messages.sort_order') }}</th>
                             <th>{{ __('messages.is_active') }}</th>
                             <th>{{ __('messages.posts') }}</th>
-                            <th>{{ __('messages.actions') }}</th>
+                            @if($canManageCategories)
+                                <th>{{ __('messages.actions') }}</th>
+                            @endif
                         </tr>
                     </thead>
                     
@@ -46,14 +50,16 @@
                                 <td>{{ $category->sort_order }}</td>
                                 <td>{{ $category->is_active ? __('messages.is_active') : __('messages.inactive') }}</td>
                                 <td>{{ $category->posts_count }}</td>
-                                <td>
-                                    <a href="{{ route('admin.categories.edit', ['locale' => $locale, 'category' => $category]) }}">{{ __('messages.edit') }}</a>
-                                    <form action="{{ route('admin.categories.destroy', ['locale' => $locale, 'category' => $category]) }}" method="POST" style="display:inline; margin-left:0.75rem;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" style="background:none;border:none;color:#dc2626;cursor:pointer;">{{ __('messages.delete') }}</button>
-                                    </form>
-                                </td>
+                                @if($canManageCategories)
+                                    <td>
+                                        <a href="{{ route('admin.categories.edit', ['locale' => $locale, 'category' => $category]) }}">{{ __('messages.edit') }}</a>
+                                        <form action="{{ route('admin.categories.destroy', ['locale' => $locale, 'category' => $category]) }}" method="POST" style="display:inline; margin-left:0.75rem;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" style="background:none;border:none;color:#dc2626;cursor:pointer;">{{ __('messages.delete') }}</button>
+                                        </form>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>

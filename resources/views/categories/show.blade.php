@@ -37,7 +37,7 @@
                             </h2>
 
                             <p class="category-item__excerpt">
-                                {{ \Illuminate\Support\Str::limit(strip_tags($post->content($locale)), 180) }}
+                                {{ \Illuminate\Support\Str::limit($post->plainContent($locale), 180) }}
                             </p>
 
                             <div class="category-item__meta">

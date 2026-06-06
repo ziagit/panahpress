@@ -39,10 +39,11 @@
                 <thead>
                     <tr>
                         <th>{{ __('messages.title_en') }}</th>
-                            <th>{{ __('messages.title_fa') }}</th>
-                            <th>{{ __('messages.category') }}</th>
-                            <th>{{ __('messages.published_at') }}</th>
-                            <th>{{ __('messages.actions') }}</th>
+                        <th>{{ __('messages.title_fa') }}</th>
+                        <th>{{ __('messages.category') }}</th>
+                        <th>{{ __('messages.author') }}</th>
+                        <th>{{ __('messages.published_at') }}</th>
+                        <th>{{ __('messages.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,6 +52,7 @@
                                 <td>{{ $post->title('en') }}</td>
                                 <td>{{ $post->title('fa') }}</td>
                                 <td>{{ $post->category?->name($locale) ?? '—' }}</td>
+                                <td>{{ $post->user?->name ?? '—' }}</td>
                                 <td>{{ $post->published_at?->format('Y-m-d') }}</td>
                                 <td>
                                     <a href="{{ route('admin.posts.edit', ['locale' => $locale, 'post' => $post]) }}">{{ __('messages.edit') }}</a>
@@ -63,7 +65,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" style="text-align:center; padding:1.5rem; color:#64748b;">No posts found.</td>
+                                <td colspan="6" style="text-align:center; padding:1.5rem; color:#64748b;">No posts found.</td>
                             </tr>
                         @endforelse
                     </tbody>

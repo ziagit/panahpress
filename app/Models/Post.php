@@ -52,6 +52,13 @@ class Post extends Model
         return $this->{'content_'.$locale} ?: $this->content_en;
     }
 
+    public function plainContent(string $locale = null): string
+    {
+        $content = $this->content($locale) ?: '';
+
+        return html_entity_decode(trim(strip_tags($content)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+
     public function imageUrl(int $index = 0): string
     {
         if ($this->image && Storage::disk('public')->exists($this->image)) {

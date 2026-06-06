@@ -5,7 +5,7 @@
         $sidebarLead = $relatedPosts->first();
         $sidebarList = $relatedPosts->skip(1)->take(4);
         $relatedCards = $relatedArticles->take(3);
-        $caption = \Illuminate\Support\Str::limit(strip_tags($post->content($locale)), 130);
+        $caption = \Illuminate\Support\Str::limit($post->plainContent($locale), 130);
         $shareUrl = route('posts.show', ['locale' => $locale, 'post' => $post->slug]);
         $shareUrlEncoded = urlencode($shareUrl);
         $shareTitle = urlencode($post->title($locale));
@@ -39,10 +39,7 @@
                 <h1 class="post-title">{{ $post->title($locale) }}</h1>
                 <div class="post-byline">
                     @php
-                        $authorName = $post->user?->name;
-                        $authorName = $authorName && $authorName !== 'PanahPress Admin'
-                            ? $authorName
-                            : 'PANAHPRESS';
+                        $authorName = $post->user?->name ?: 'Staff Reporter';
                     @endphp
                     <span>{{ __('messages.by') }} {{ $authorName }}</span>
                     <span>{{ $post->published_at?->translatedFormat('M d, Y') }}</span>
@@ -63,9 +60,9 @@
                         id="post-share-copy"
                         class="post-share-copy"
                         data-share-url="{{ $shareUrl }}"
-                        aria-label="Copy post URL"
+                        aria-label="Share post link"
                     >
-                        Copy
+                        <span class="post-share-copy__label">Share</span>
                     </button>
                 </div>
             </div>
@@ -90,13 +87,24 @@
                             return;
                         }
 
+                        const label = copyButton.querySelector('.post-share-copy__label');
+                        const defaultLabel = label ? label.textContent : 'Share';
+
                         copyButton.addEventListener('click', () => {
                             const shareUrl = copyButton.dataset.shareUrl || window.location.href;
 
                             navigator.clipboard.writeText(shareUrl).then(() => {
-                                copyButton.textContent = 'Copied';
+                                if (label) {
+                                    label.textContent = 'Copied';
+                                } else {
+                                    copyButton.textContent = 'Copied';
+                                }
                                 setTimeout(() => {
-                                    copyButton.textContent = 'Copy';
+                                    if (label) {
+                                        label.textContent = defaultLabel;
+                                    } else {
+                                        copyButton.textContent = defaultLabel;
+                                    }
                                 }, 1500);
                             }).catch(() => {
                                 window.prompt('Copy this URL:', shareUrl);
@@ -170,7 +178,7 @@
                         <img src="{{ $sidebarLead->imageUrl() }}" alt="{{ $sidebarLead->title($locale) }}">
                         <div class="post-sidebar__latest-featured-title">{{ $sidebarLead->title($locale) }}</div>
                         <div class="post-sidebar__latest-featured-excerpt">
-                            {{ \Illuminate\Support\Str::limit(strip_tags($sidebarLead->content($locale)), 110) }}
+                            {{ \Illuminate\Support\Str::limit($sidebarLead->plainContent($locale), 110) }}
                         </div>
                     </a>
                 @endif

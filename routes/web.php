@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\AuthorController as AdminAuthorController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\VerificationCardController as AdminVerificationCardController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
@@ -146,7 +147,7 @@ Route::group([
     |--------------------------------------------------------------------------
     */
 
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['auth', 'role:admin,author'])->group(function () {
 
         /*
         |--------------------------------------------------------------------------
@@ -172,14 +173,31 @@ Route::group([
         Route::delete('/admin/posts/{post}', [PostController::class, 'destroy'])
             ->name('admin.posts.destroy');
 
+        Route::get('/admin/categories', [AdminCategoryController::class, 'index'])
+            ->name('admin.categories.index');
+
         /*
         |--------------------------------------------------------------------------
-        | CATEGORIES (FIXED - NO CONFLICTS)
+        | PROFILE
         |--------------------------------------------------------------------------
         */
 
-        Route::get('/admin/categories', [AdminCategoryController::class, 'index'])
-            ->name('admin.categories.index');
+        Route::get('/admin/profile', [AdminProfileController::class, 'edit'])
+            ->name('admin.profile.edit');
+
+        Route::put('/admin/profile', [AdminProfileController::class, 'update'])
+            ->name('admin.profile.update');
+
+        Route::put('/admin/profile/password', [AdminProfileController::class, 'updatePassword'])
+            ->name('admin.profile.password');
+    });
+
+    Route::middleware(['auth', 'role:admin'])->group(function () {
+        /*
+        |--------------------------------------------------------------------------
+        | CATEGORIES WRITE ACCESS
+        |--------------------------------------------------------------------------
+        */
 
         Route::get('/admin/categories/create', [AdminCategoryController::class, 'create'])
             ->name('admin.categories.create');
@@ -195,6 +213,27 @@ Route::group([
 
         Route::delete('/admin/categories/{category}', [AdminCategoryController::class, 'destroy'])
             ->name('admin.categories.destroy');
+
+        /*
+        |--------------------------------------------------------------------------
+        | AUTHORS
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/admin/authors', [AdminAuthorController::class, 'index'])
+            ->name('admin.authors.index');
+
+        Route::get('/admin/authors/create', [AdminAuthorController::class, 'create'])
+            ->name('admin.authors.create');
+
+        Route::post('/admin/authors', [AdminAuthorController::class, 'store'])
+            ->name('admin.authors.store');
+
+        Route::get('/admin/authors/{author}/edit', [AdminAuthorController::class, 'edit'])
+            ->name('admin.authors.edit');
+
+        Route::put('/admin/authors/{author}', [AdminAuthorController::class, 'update'])
+            ->name('admin.authors.update');
 
         /*
         |--------------------------------------------------------------------------
@@ -220,20 +259,6 @@ Route::group([
         Route::delete('/admin/verifications/{verification}', [AdminVerificationCardController::class, 'destroy'])
             ->name('admin.verifications.destroy');
 
-        /*
-        |--------------------------------------------------------------------------
-        | PROFILE
-        |--------------------------------------------------------------------------
-        */
-
-        Route::get('/admin/profile', [AdminProfileController::class, 'edit'])
-            ->name('admin.profile.edit');
-
-        Route::put('/admin/profile', [AdminProfileController::class, 'update'])
-            ->name('admin.profile.update');
-
-        Route::put('/admin/profile/password', [AdminProfileController::class, 'updatePassword'])
-            ->name('admin.profile.password');
     });
 
     Route::fallback(function (Request $request) {

@@ -35,12 +35,26 @@ class PostController extends Controller
             ->firstOrFail();
     }
 
+    protected function ensurePostAccess(Request $request, Post $post): void
+    {
+        $user = $request->user();
+
+        if ($user?->isAuthor() && $post->user_id !== $user->id) {
+            abort(403);
+        }
+    }
+
     public function index(Request $request)
     {
         $locale = $this->setLocale($request);
         $search = trim((string) $request->query('search', ''));
+        $user = $request->user();
 
-        $query = Post::with('category')->latest('created_at');
+        $query = Post::with(['category', 'user'])->latest('created_at');
+
+        if ($user?->isAuthor()) {
+            $query->where('user_id', $user->id);
+        }
 
         if ($search !== '') {
             $query->where(function ($builder) use ($search) {
@@ -85,6 +99,8 @@ class PostController extends Controller
             $attributes['image'] = $request->file('image')->store('uploads', 'public');
         }
 
+        $attributes['user_id'] = $request->user()->id;
+
         Post::create($attributes);
 
         return Redirect::route('admin.posts.index', ['locale' => $locale])
@@ -95,6 +111,7 @@ class PostController extends Controller
     {
         $locale = $this->setLocale($request);
         $post = $this->resolvePost($post);
+        $this->ensurePostAccess($request, $post);
         $categories = Category::ordered()->get();
     
         return view('admin.posts.edit', compact('post', 'locale', 'categories'));
@@ -104,6 +121,7 @@ class PostController extends Controller
     {
         $locale = $this->setLocale($request);
         $post = $this->resolvePost($post);
+        $this->ensurePostAccess($request, $post);
     
         $attributes = $request->validate([
             'title_en' => ['required', 'string', 'max:255'],
@@ -138,6 +156,7 @@ class PostController extends Controller
     {
         $locale = $this->setLocale($request);
         $post = $this->resolvePost($post);
+        $this->ensurePostAccess($request, $post);
 
         if ($post->image) {
             Storage::disk('public')->delete($post->image);
