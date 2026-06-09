@@ -119,7 +119,7 @@
 
         <section class="home-ad-banner" aria-label="Advertisement">
             <img
-                src="{{ asset('images/ads/2nd-anniversary.JPEG') }}"
+                src="{{ asset('storage/ads/2nd-anniversary.jpeg') }}"
                 alt="2nd Anniversary advertisement"
                 class="home-ad-banner__image"
                 loading="lazy"
