@@ -6,7 +6,7 @@
         $sidebarList = $relatedPosts->skip(1)->take(4);
         $relatedCards = $relatedArticles->take(3);
         $caption = \Illuminate\Support\Str::limit($post->plainContent($locale), 130);
-        $videoEmbedUrl = $post->videoEmbedUrl($locale);
+        $videoUrl = $post->videoWatchUrl($locale);
         $shareUrl = route('posts.show', ['locale' => $locale, 'post' => $post->slug]);
         $shareUrlEncoded = urlencode($shareUrl);
         $shareTitle = urlencode($post->title($locale));
@@ -69,31 +69,18 @@
             </div>
 
             <figure class="post-featured">
-                            <img class="post-image" src="{{ $post->imageUrl() }}" alt="{{ $post->title($locale) }}">
+                <img class="post-image" src="{{ $post->imageUrl() }}" alt="{{ $post->title($locale) }}">
                 <figcaption class="post-caption">
                     {{ $caption }}
                 </figcaption>
             </figure>
 
-            @if($post->isYoutubeVideoSource($locale))
-                <figure class="post-video post-video--shorts">
-                    <a href="{{ $post->videoWatchUrl($locale) }}" target="_blank" rel="noopener noreferrer" class="post-video__link">
-                        @if($post->videoThumbnailUrl($locale))
-                            <img src="{{ $post->videoThumbnailUrl($locale) }}" alt="{{ $post->title($locale) }}">
-                        @endif
-                        <span class="post-video__badge">Watch on YouTube</span>
-                    </a>
-                </figure>
-            @elseif($videoEmbedUrl)
+            @if($videoUrl)
                 <figure class="post-video">
-                    <iframe
-                        src="{{ $videoEmbedUrl }}"
-                        title="{{ $post->title($locale) }}"
-                        allow="autoplay; encrypted-media; picture-in-picture"
-                        allowfullscreen
-                        loading="lazy"
-                        referrerpolicy="strict-origin-when-cross-origin"
-                    ></iframe>
+                    <a href="{{ $videoUrl }}" target="_blank" rel="noopener noreferrer" class="post-video__link post-video__link--text">
+                        <span class="post-video__link-label">Watch video</span>
+                        <span class="post-video__link-url">{{ $videoUrl }}</span>
+                    </a>
                 </figure>
             @endif
 
