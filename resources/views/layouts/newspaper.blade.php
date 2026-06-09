@@ -728,6 +728,20 @@
             padding-top: 22px;
         }
 
+        .home-ad-banner {
+            display: block;
+            margin-top: 6px;
+            overflow: hidden;
+            background: #fff7b8;
+        }
+
+        .home-ad-banner__image {
+            display: block;
+            width: 100%;
+            aspect-ratio: 4 / 1;
+            object-fit: cover;
+        }
+
         .home-story-card {
             display: grid;
             gap: 10px;
@@ -1690,6 +1704,41 @@
             border: 0;
         }
 
+        .post-video {
+            margin: 1.25rem 0 0;
+        }
+
+        .post-video__link {
+            position: relative;
+            display: block;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: #0f172a;
+        }
+
+        .post-video__link img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            margin: 0;
+            display: block;
+            opacity: 0.9;
+        }
+
+        .post-video__badge {
+            position: absolute;
+            left: 14px;
+            bottom: 14px;
+            padding: 0.45rem 0.7rem;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.88);
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
         .post-sidebar__search,
         .post-sidebar__newsletter,
         .post-sidebar__latest {
@@ -2365,6 +2414,10 @@
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
+            .home-ad-banner__image {
+                aspect-ratio: 16 / 6;
+            }
+
             .footer-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
@@ -2395,6 +2448,10 @@
             .video-grid,
             .footer-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .home-ad-banner__image {
+                aspect-ratio: 16 / 9;
             }
 
             .logo-row__side--right {

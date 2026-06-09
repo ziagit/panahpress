@@ -314,19 +314,20 @@ class HomeController extends Controller
 
     private function buildVideoStories(string $locale): Collection
     {
-        $videoCategory = Category::active()->where('slug', 'videos')->first();
-
-        if (! $videoCategory) {
-            return collect();
-        }
-
         $videoPosts = Post::with(['category', 'user'])
             ->published()
-            ->where('category_id', $videoCategory->id)
             ->orderByRaw('COALESCE(published_at, created_at) desc')
             ->get()
-            ->filter(fn (Post $post) => (bool) ($post->video_url ?: $this->extractVideoUrl($post->content($locale) ?: '')))
+            ->filter(function (Post $post) use ($locale) {
+                return (bool) ($post->video_url ?: $this->extractVideoUrl($post->content($locale) ?: ''));
+            })
             ->values();
+
+        $videoCategory = Category::active()->where('slug', 'videos')->first();
+
+        if ($videoCategory) {
+            $videoPosts = $videoPosts->filter(fn (Post $post) => (int) $post->category_id === (int) $videoCategory->id)->values();
+        }
 
         $stories = $videoPosts
             ->map(fn (Post $post, int $index) => $this->decorateStory($post, $index, $locale))
@@ -334,11 +335,7 @@ class HomeController extends Controller
             ->take(8)
             ->values();
 
-        if ($stories->isNotEmpty()) {
-            return $stories;
-        }
-
-        return $this->fallbackVideoStories($locale);
+        return $stories->isNotEmpty() ? $stories : $this->fallbackVideoStories($locale);
     }
 
     private function fallbackVideoStories(string $locale): Collection

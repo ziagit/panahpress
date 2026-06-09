@@ -6,6 +6,7 @@
         $sidebarList = $relatedPosts->skip(1)->take(4);
         $relatedCards = $relatedArticles->take(3);
         $caption = \Illuminate\Support\Str::limit($post->plainContent($locale), 130);
+        $videoEmbedUrl = $post->videoEmbedUrl($locale);
         $shareUrl = route('posts.show', ['locale' => $locale, 'post' => $post->slug]);
         $shareUrlEncoded = urlencode($shareUrl);
         $shareTitle = urlencode($post->title($locale));
@@ -74,8 +75,30 @@
                 </figcaption>
             </figure>
 
+            @if($post->isYoutubeVideoSource($locale))
+                <figure class="post-video post-video--shorts">
+                    <a href="{{ $post->videoWatchUrl($locale) }}" target="_blank" rel="noopener noreferrer" class="post-video__link">
+                        @if($post->videoThumbnailUrl($locale))
+                            <img src="{{ $post->videoThumbnailUrl($locale) }}" alt="{{ $post->title($locale) }}">
+                        @endif
+                        <span class="post-video__badge">Watch on YouTube</span>
+                    </a>
+                </figure>
+            @elseif($videoEmbedUrl)
+                <figure class="post-video">
+                    <iframe
+                        src="{{ $videoEmbedUrl }}"
+                        title="{{ $post->title($locale) }}"
+                        allow="autoplay; encrypted-media; picture-in-picture"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                    ></iframe>
+                </figure>
+            @endif
+
             <div class="post-content">
-                {!! $post->content($locale) !!}
+                {!! $post->renderedContent($locale) !!}
             </div>
 
             @push('scripts')

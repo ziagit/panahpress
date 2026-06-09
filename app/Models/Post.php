@@ -59,6 +59,198 @@ class Post extends Model
         return html_entity_decode(trim(strip_tags($content)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
+    public function videoEmbedUrl(string $locale = null): ?string
+    {
+        $url = $this->normalizeVideoSource((string) ($this->video_url ?: ''));
+
+        if ($url === '') {
+            $url = $this->extractVideoSourceFromContent($this->content($locale) ?: '');
+        }
+
+        if ($this->isYoutubeVideoSource($locale)) {
+            return null;
+        }
+
+        if ($url === '') {
+            return null;
+        }
+
+        return $url;
+    }
+
+    public function isYoutubeVideoSource(string $locale = null): bool
+    {
+        $source = trim((string) ($this->video_url ?: ''));
+
+        if ($source === '') {
+            $source = $this->extractVideoSourceFromContent($this->content($locale) ?: '');
+        }
+
+        return (bool) preg_match('#(?:youtube\.com|youtu\.be)#i', $source);
+    }
+
+    public function videoWatchUrl(string $locale = null): ?string
+    {
+        $source = trim((string) ($this->video_url ?: ''));
+
+        if ($source === '') {
+            $source = $this->extractVideoSourceFromContent($this->content($locale) ?: '');
+        }
+
+        $videoId = $this->extractYoutubeId($source);
+
+        return $videoId ? 'https://www.youtube.com/watch?v='.$videoId : ($source ?: null);
+    }
+
+    public function videoThumbnailUrl(string $locale = null): ?string
+    {
+        $source = trim((string) ($this->video_url ?: ''));
+
+        if ($source === '') {
+            $source = $this->extractVideoSourceFromContent($this->content($locale) ?: '');
+        }
+
+        $videoId = $this->extractYoutubeId($source);
+
+        return $videoId ? 'https://img.youtube.com/vi/'.$videoId.'/hqdefault.jpg' : null;
+    }
+
+    public function renderedContent(string $locale = null): string
+    {
+        $content = $this->content($locale) ?: '';
+
+        if ($content === '') {
+            return '';
+        }
+
+        if ($this->isYoutubeVideoSource($locale)) {
+            return preg_replace(
+                '/<iframe\b[^>]*src=(["\'])(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)[^>]*>.*?<\/iframe>/is',
+                '',
+                $content
+            ) ?: $content;
+        }
+
+        return preg_replace_callback(
+            '/<iframe\b([^>]*?)src=(["\'])([^"\']+)\2([^>]*)>(.*?)<\/iframe>/is',
+            function (array $matches): string {
+                $src = $this->normalizeVideoSource($matches[3]);
+
+                if ($src === '') {
+                    return $matches[0];
+                }
+
+                if ($this->isVideoSource($src)) {
+                    return '';
+                }
+
+                return '<iframe'.$matches[1].'src="'.$src.'"'.$matches[4].'>'.$matches[5].'</iframe>';
+            },
+            $content
+        ) ?: $content;
+    }
+
+    protected function extractVideoSourceFromContent(string $content): string
+    {
+        if ($content === '') {
+            return '';
+        }
+
+        if (preg_match('/<iframe\b[^>]*src=(["\'])([^"\']+)\1/i', $content, $matches)) {
+            $normalized = $this->normalizeVideoSource($matches[2]);
+
+            if ($this->isVideoSource($normalized)) {
+                return $normalized;
+            }
+        }
+
+        if (preg_match('/https?:\/\/[^\s"<>\']+/i', html_entity_decode($content, ENT_QUOTES | ENT_HTML5, 'UTF-8'), $matches)) {
+            $normalized = $this->normalizeVideoSource($matches[0]);
+
+            if ($this->isVideoSource($normalized)) {
+                return $normalized;
+            }
+        }
+
+        return '';
+    }
+
+    protected function isVideoSource(string $value): bool
+    {
+        return str_contains($value, 'youtube.com/embed/')
+            || str_contains($value, 'youtube-nocookie.com/embed/')
+            || str_contains($value, 'player.vimeo.com/video/');
+    }
+
+    protected function normalizeVideoSource(string $value): string
+    {
+        $value = trim(html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+
+        if ($value === '') {
+            return '';
+        }
+
+        if (preg_match('/<iframe[^>]+src=["\']([^"\']+)["\']/i', $value, $matches)) {
+            $value = $matches[1];
+        }
+
+        if (preg_match('/<a[^>]+href=["\']([^"\']+)["\']/i', $value, $matches)) {
+            $value = $matches[1];
+        }
+
+        if (str_contains($value, 'youtube.com') || str_contains($value, 'youtu.be')) {
+            $videoId = $this->extractYoutubeId($value);
+
+            if ($videoId) {
+                return 'https://www.youtube-nocookie.com/embed/'.$videoId.'?rel=0&modestbranding=1';
+            }
+
+            if (str_contains($value, '/embed/')) {
+                return $value;
+            }
+        }
+
+        if (str_contains($value, 'vimeo.com/')) {
+            if (str_contains($value, '/video/')) {
+                return preg_replace('#vimeo\.com/video/#', 'player.vimeo.com/video/', $value) ?: $value;
+            }
+
+            $path = trim((string) parse_url($value, PHP_URL_PATH), '/');
+            $id = basename($path);
+
+            return $id ? 'https://player.vimeo.com/video/'.$id : $value;
+        }
+
+        return $value;
+    }
+
+    protected function extractYoutubeId(string $value): ?string
+    {
+        $value = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        if (preg_match('/[?&]v=([A-Za-z0-9_-]{6,})/i', $value, $matches)) {
+            return $matches[1];
+        }
+
+        if (preg_match('#youtu\.be/([A-Za-z0-9_-]{6,})#i', $value, $matches)) {
+            return $matches[1];
+        }
+
+        if (preg_match('#youtube\.com/embed/([A-Za-z0-9_-]{6,})#i', $value, $matches)) {
+            return $matches[1];
+        }
+
+        if (preg_match('#youtube\.com/shorts/([A-Za-z0-9_-]{6,})#i', $value, $matches)) {
+            return $matches[1];
+        }
+
+        if (preg_match('#youtube\.com/live/([A-Za-z0-9_-]{6,})#i', $value, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+
     public function imageUrl(int $index = 0): string
     {
         if ($this->image && Storage::disk('public')->exists($this->image)) {

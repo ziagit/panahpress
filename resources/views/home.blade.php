@@ -117,6 +117,15 @@
             @endforeach
         </section>
 
+        <section class="home-ad-banner" aria-label="Advertisement">
+            <img
+                src="{{ asset('images/ads/2nd-anniversary.JPEG') }}"
+                alt="2nd Anniversary advertisement"
+                class="home-ad-banner__image"
+                loading="lazy"
+            >
+        </section>
+
         <section class="business-section" id="business">
             <x-home.section-title :title="__('messages.business')" />
             <div class="business-layout">
