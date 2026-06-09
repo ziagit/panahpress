@@ -25,6 +25,16 @@ Route::get('/', function () {
     return redirect('/en');
 });
 
+Route::get('/banner/2nd-anniversary', function () {
+    $path = storage_path('app/public/ads/2nd-anniversary.jpeg');
+
+    abort_unless(file_exists($path), 404);
+
+    return response()->file($path, [
+        'Cache-Control' => 'public, max-age=86400',
+    ]);
+})->name('ads.banner.2nd-anniversary');
+
 /*
 |--------------------------------------------------------------------------
 | ADMIN ENTRY
