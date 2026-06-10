@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App as AppFacade;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class CategoryController extends Controller
 {
@@ -35,6 +37,12 @@ class CategoryController extends Controller
         }
 
         return $slug;
+    }
+
+    protected function isDuplicateSlugException(QueryException $exception): bool
+    {
+        return (int) ($exception->errorInfo[1] ?? 0) === 1062
+            && str_contains($exception->getMessage(), 'categories_slug_unique');
     }
 
     public function index(Request $request)
@@ -71,7 +79,17 @@ class CategoryController extends Controller
         $attributes['is_active'] = $request->boolean('is_active');
         $attributes['sort_order'] = $attributes['sort_order'] ?? 0;
 
-        Category::create($attributes);
+        try {
+            Category::create($attributes);
+        } catch (QueryException $exception) {
+            if ($this->isDuplicateSlugException($exception)) {
+                throw ValidationException::withMessages([
+                    'name_en' => __('messages.category_slug_exists'),
+                ]);
+            }
+
+            throw $exception;
+        }
 
         return Redirect::route('admin.categories.index', ['locale' => $locale])
             ->with('success', __('messages.category_saved'));
@@ -104,7 +122,17 @@ class CategoryController extends Controller
         $attributes['is_active'] = $request->boolean('is_active');
         $attributes['sort_order'] = $attributes['sort_order'] ?? 0;
 
-        $category->update($attributes);
+        try {
+            $category->update($attributes);
+        } catch (QueryException $exception) {
+            if ($this->isDuplicateSlugException($exception)) {
+                throw ValidationException::withMessages([
+                    'name_en' => __('messages.category_slug_exists'),
+                ]);
+            }
+
+            throw $exception;
+        }
 
         return redirect()->route('admin.categories.index', ['locale' => $locale]);
     }

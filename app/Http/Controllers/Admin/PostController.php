@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App as AppFacade;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class PostController extends Controller
 {
@@ -42,6 +44,30 @@ class PostController extends Controller
         if ($user?->isAuthor() && $post->user_id !== $user->id) {
             abort(403);
         }
+    }
+
+    protected function uniqueSlug(string $titleEn, string $titleFa, ?Post $ignore = null): string
+    {
+        $base = Str::slug($titleEn) ?: Str::slug($titleFa) ?: 'post';
+        $slug = $base;
+        $counter = 2;
+
+        while (
+            Post::where('slug', $slug)
+                ->when($ignore, fn ($query) => $query->where('id', '!=', $ignore->id))
+                ->exists()
+        ) {
+            $slug = $base.'-'.$counter;
+            $counter++;
+        }
+
+        return $slug;
+    }
+
+    protected function isDuplicateSlugException(QueryException $exception): bool
+    {
+        return (int) ($exception->errorInfo[1] ?? 0) === 1062
+            && str_contains($exception->getMessage(), 'posts_slug_unique');
     }
 
     public function index(Request $request)
@@ -92,7 +118,7 @@ class PostController extends Controller
             'image' => ['nullable', 'image', 'max:10240'],
         ]);
 
-        $attributes['slug'] = Str::slug($attributes['title_en']) ?: Str::slug($attributes['title_fa']) ?: (string) time();
+        $attributes['slug'] = $this->uniqueSlug($attributes['title_en'], $attributes['title_fa']);
         $attributes['published_at'] = $attributes['published_at'] ?: now();
 
         if ($request->hasFile('image')) {
@@ -101,7 +127,17 @@ class PostController extends Controller
 
         $attributes['user_id'] = $request->user()->id;
 
-        Post::create($attributes);
+        try {
+            Post::create($attributes);
+        } catch (QueryException $exception) {
+            if ($this->isDuplicateSlugException($exception)) {
+                throw ValidationException::withMessages([
+                    'title_en' => __('messages.post_slug_exists'),
+                ]);
+            }
+
+            throw $exception;
+        }
 
         return Redirect::route('admin.posts.index', ['locale' => $locale])
             ->with('success', __('messages.post_saved'));
@@ -134,7 +170,7 @@ class PostController extends Controller
             'image' => ['nullable', 'image', 'max:10240'],
         ]);
     
-        $attributes['slug'] = Str::slug($attributes['title_en']) ?: Str::slug($attributes['title_fa']) ?: $post->slug;
+        $attributes['slug'] = $this->uniqueSlug($attributes['title_en'], $attributes['title_fa'], $post);
         $attributes['published_at'] = $attributes['published_at'] ?: now();
 
         if ($request->hasFile('image')) {
@@ -146,7 +182,17 @@ class PostController extends Controller
             $attributes['image'] = $request->file('image')->store('uploads', 'public');
         }
     
-        $post->update($attributes);
+        try {
+            $post->update($attributes);
+        } catch (QueryException $exception) {
+            if ($this->isDuplicateSlugException($exception)) {
+                throw ValidationException::withMessages([
+                    'title_en' => __('messages.post_slug_exists'),
+                ]);
+            }
+
+            throw $exception;
+        }
     
         return Redirect::route('admin.posts.index', ['locale' => $locale])
             ->with('success', __('messages.post_saved'));

@@ -257,7 +257,7 @@ class HomeController extends Controller
             return $this->normalizeEmbedUrl($matches[1]);
         }
 
-        if (preg_match('/https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|vimeo\.com\/(?:video\/)?)([A-Za-z0-9_\-]+)/i', $content, $matches)) {
+        if (preg_match('/https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/|youtube\.com\/live\/|vimeo\.com\/(?:video\/)?)([A-Za-z0-9_\-]+)/i', $content, $matches)) {
             return $this->normalizeEmbedUrl($matches[0]);
         }
 
@@ -283,7 +283,15 @@ class HomeController extends Controller
             return $path ? 'https://www.youtube.com/embed/'.$path : $url;
         }
 
+        if (preg_match('#youtube\.com/(?:shorts|live)/([A-Za-z0-9_-]{6,})#i', $url, $matches)) {
+            return 'https://www.youtube.com/embed/'.$matches[1];
+        }
+
         if (str_contains($url, 'youtube.com/embed/')) {
+            return $url;
+        }
+
+        if (str_contains($url, 'youtube-nocookie.com/embed/')) {
             return $url;
         }
 
