@@ -138,6 +138,19 @@
             padding-inline: 20px;
         }
 
+        .login-form__links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 18px;
+            margin-top: 16px;
+            font-size: 0.94rem;
+        }
+
+        .login-form__links a {
+            color: #0a79a7;
+            font-weight: 700;
+        }
+
         .login-error {
             margin-bottom: 18px;
             padding: 12px 14px;
@@ -207,6 +220,12 @@
                         </div>
                     @endif
 
+                    @if (session('status'))
+                        <div class="login-error" style="background:#ecfeff;border-color:#99f6e4;color:#0f766e;">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+
                     <form method="POST" action="{{ route('login', ['locale' => $locale]) }}">
                         @csrf
 
@@ -222,6 +241,10 @@
 
                         <div class="login-form__actions">
                             <button type="submit" class="button">{{ __('messages.login') }}</button>
+                        </div>
+
+                        <div class="login-form__links">
+                            <a href="{{ route('password.request', ['locale' => $locale]) }}">{{ __('messages.forgot_password') }}</a>
                         </div>
                     </form>
                 </div>

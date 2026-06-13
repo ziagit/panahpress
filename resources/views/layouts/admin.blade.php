@@ -431,8 +431,16 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('form').forEach(function(form) {
+                var customConfirmMessage = form.getAttribute('data-confirm-message');
                 var methodInput = form.querySelector('input[name="_method"][type="hidden"]');
-                if (methodInput && methodInput.value.toUpperCase() === 'DELETE') {
+                if (customConfirmMessage) {
+                    form.addEventListener('submit', function(event) {
+                        var confirmed = confirm(customConfirmMessage);
+                        if (!confirmed) {
+                            event.preventDefault();
+                        }
+                    });
+                } else if (methodInput && methodInput.value.toUpperCase() === 'DELETE') {
                     form.addEventListener('submit', function(event) {
                         var confirmed = confirm('Are you sure you want to delete this item?');
                         if (!confirmed) {

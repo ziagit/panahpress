@@ -35,27 +35,52 @@
         </form>
 
         <div class="table-wrap">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>{{ __('messages.title_en') }}</th>
-                        <th>{{ __('messages.title_fa') }}</th>
-                        <th>{{ __('messages.category') }}</th>
-                        <th>{{ __('messages.author') }}</th>
-                        <th>{{ __('messages.published_at') }}</th>
-                        <th>{{ __('messages.actions') }}</th>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width:14%;">{{ __('messages.title_en') }}</th>
+                            <th style="width:14%;">{{ __('messages.title_fa') }}</th>
+                            <th>{{ __('messages.category') }}</th>
+                            <th>{{ __('messages.author') }}</th>
+                            <th>{{ __('messages.post_status') }}</th>
+                            <th>{{ __('messages.published_at') }}</th>
+                            <th style="width:24%;">{{ __('messages.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($posts as $post)
                             <tr>
-                                <td>{{ $post->title('en') }}</td>
-                                <td>{{ $post->title('fa') }}</td>
+                                <td style="max-width:14rem; word-break:break-word;">{{ $post->title('en') }}</td>
+                                <td style="max-width:14rem; word-break:break-word;">{{ $post->title('fa') }}</td>
                                 <td>{{ $post->category?->name($locale) ?? '—' }}</td>
                                 <td>{{ $post->user?->name ?? '—' }}</td>
-                                <td>{{ $post->published_at?->format('Y-m-d') }}</td>
                                 <td>
+                                    @if($post->isPendingApproval())
+                                        <span class="badge" style="background:#f59e0b;">{{ __('messages.pending_review') }}</span>
+                                    @elseif($post->isScheduled())
+                                        <span class="badge" style="background:#2563eb;">{{ __('messages.scheduled') }}</span>
+                                    @else
+                                        <span class="badge" style="background:#16a34a;">{{ __('messages.published') }}</span>
+                                    @endif
+                                </td>
+                                <td>{{ $post->published_at?->format('Y-m-d') }}</td>
+                                <td style="white-space:nowrap;">
                                     <a href="{{ route('admin.posts.edit', ['locale' => $locale, 'post' => $post]) }}">{{ __('messages.edit') }}</a>
+                                    @if(auth()->user()?->isAdmin())
+                                        @if($post->isPendingApproval())
+                                            <form action="{{ route('admin.posts.approve', ['locale' => $locale, 'post' => $post]) }}" method="POST" style="display:inline; margin-left:0.75rem;" data-confirm-message="{{ __('messages.confirm_approve_action') }}">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" style="background:none;border:none;color:#2563eb;cursor:pointer;">{{ __('messages.approve') }}</button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('admin.posts.disapprove', ['locale' => $locale, 'post' => $post]) }}" method="POST" style="display:inline; margin-left:0.75rem;" data-confirm-message="{{ __('messages.confirm_disapprove_action') }}">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" style="background:none;border:none;color:#b91c1c;cursor:pointer;">{{ __('messages.disapprove') }}</button>
+                                            </form>
+                                        @endif
+                                    @endif
                                     <form action="{{ route('admin.posts.destroy', ['locale' => $locale, 'post' => $post]) }}" method="POST" style="display:inline; margin-left:0.75rem;">
                                         @csrf
                                         @method('DELETE')
@@ -65,7 +90,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" style="text-align:center; padding:1.5rem; color:#64748b;">No posts found.</td>
+                                <td colspan="7" style="text-align:center; padding:1.5rem; color:#64748b;">No posts found.</td>
                             </tr>
                         @endforelse
                     </tbody>

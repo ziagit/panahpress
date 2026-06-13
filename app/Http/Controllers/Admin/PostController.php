@@ -41,9 +41,28 @@ class PostController extends Controller
     {
         $user = $request->user();
 
-        if ($user?->isAuthor() && $post->user_id !== $user->id) {
+        if ($user?->isAdmin()) {
+            return;
+        }
+
+        if (! $user?->isAuthor() || $post->user_id !== $user->id) {
             abort(403);
         }
+
+        if (! $post->canBeEditedByAuthor()) {
+            abort(403);
+        }
+    }
+
+    protected function resolvePublishedAt(Request $request, array $attributes, ?Post $post = null)
+    {
+        $user = $request->user();
+
+        if ($user?->isAdmin()) {
+            return $attributes['published_at'] ?: now();
+        }
+
+        return $post?->published_at;
     }
 
     protected function uniqueSlug(string $titleEn, string $titleFa, ?Post $ignore = null): string
@@ -119,7 +138,7 @@ class PostController extends Controller
         ]);
 
         $attributes['slug'] = $this->uniqueSlug($attributes['title_en'], $attributes['title_fa']);
-        $attributes['published_at'] = $attributes['published_at'] ?: now();
+        $attributes['published_at'] = $this->resolvePublishedAt($request, $attributes);
 
         if ($request->hasFile('image')) {
             $attributes['image'] = $request->file('image')->store('uploads', 'public');
@@ -171,7 +190,7 @@ class PostController extends Controller
         ]);
     
         $attributes['slug'] = $this->uniqueSlug($attributes['title_en'], $attributes['title_fa'], $post);
-        $attributes['published_at'] = $attributes['published_at'] ?: now();
+        $attributes['published_at'] = $this->resolvePublishedAt($request, $attributes, $post);
 
         if ($request->hasFile('image')) {
             // delete old file if exists
@@ -196,6 +215,36 @@ class PostController extends Controller
     
         return Redirect::route('admin.posts.index', ['locale' => $locale])
             ->with('success', __('messages.post_saved'));
+    }
+
+    public function approve(Request $request, $locale, $post)
+    {
+        $locale = $this->setLocale($request);
+        $post = $this->resolvePost($post);
+
+        abort_unless($request->user()?->isAdmin(), 403);
+
+        $post->update([
+            'published_at' => now(),
+        ]);
+
+        return Redirect::route('admin.posts.index', ['locale' => $locale])
+            ->with('success', __('messages.post_approved'));
+    }
+
+    public function disapprove(Request $request, $locale, $post)
+    {
+        $locale = $this->setLocale($request);
+        $post = $this->resolvePost($post);
+
+        abort_unless($request->user()?->isAdmin(), 403);
+
+        $post->update([
+            'published_at' => null,
+        ]);
+
+        return Redirect::route('admin.posts.index', ['locale' => $locale])
+            ->with('success', __('messages.post_disapproved'));
     }
 
     public function destroy(Request $request, $locale, $post)

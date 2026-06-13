@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\VerificationCardController as AdminVerificationCardController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsletterSubscriptionController;
@@ -148,6 +149,18 @@ Route::group([
 
     Route::post('/login', [LoginController::class, 'login']);
 
+    Route::get('/forgot-password', [PasswordResetController::class, 'showLinkRequestForm'])
+        ->name('password.request');
+
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])
+        ->name('password.email');
+
+    Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])
+        ->name('password.reset');
+
+    Route::post('/reset-password', [PasswordResetController::class, 'reset'])
+        ->name('password.update');
+
     Route::post('/logout', [LoginController::class, 'logout'])
         ->name('logout');
 
@@ -179,6 +192,12 @@ Route::group([
 
         Route::put('/admin/posts/{post}', [PostController::class, 'update'])
             ->name('admin.posts.update');
+
+        Route::patch('/admin/posts/{post}/approve', [PostController::class, 'approve'])
+            ->name('admin.posts.approve');
+
+        Route::patch('/admin/posts/{post}/disapprove', [PostController::class, 'disapprove'])
+            ->name('admin.posts.disapprove');
 
         Route::delete('/admin/posts/{post}', [PostController::class, 'destroy'])
             ->name('admin.posts.destroy');

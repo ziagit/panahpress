@@ -62,10 +62,17 @@
         <p class="editor-help">Paste a YouTube, Vimeo, or other embeddable video link here. Uploading is not required for video posts.</p>
     </div>
 
-    <div class="form-field">
-        <label for="published_at">{{ __('messages.published_at') }}</label>
-        <input id="published_at" type="date" name="published_at" value="{{ old('published_at', optional($post)->published_at?->format('Y-m-d')) }}" />
-    </div>
+    @if(auth()->user()?->isAdmin())
+        <div class="form-field">
+            <label for="published_at">{{ __('messages.published_at') }}</label>
+            <input id="published_at" type="date" name="published_at" value="{{ old('published_at', optional($post)->published_at?->format('Y-m-d')) }}" />
+            <p class="editor-help">{{ __('messages.post_publish_help') }}</p>
+        </div>
+    @else
+        <div class="form-field">
+            <p class="editor-help">{{ __('messages.post_pending_review_notice') }}</p>
+        </div>
+    @endif
 
     <div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center; margin-top:1rem;">
         <button type="submit" class="button">{{ __('messages.save_post') }}</button>

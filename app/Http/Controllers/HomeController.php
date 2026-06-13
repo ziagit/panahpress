@@ -106,6 +106,8 @@ class HomeController extends Controller
     {
         AppFacade::setLocale($locale);
 
+        abort_unless($post->isPublished(), 404);
+
         $relatedArticles = collect();
 
         if ($post->category_id) {

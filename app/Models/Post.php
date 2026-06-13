@@ -25,7 +25,33 @@ class Post extends Model
 
     public function scopePublished($query)
     {
-        return $query;
+        return $query
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now());
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->published_at !== null && $this->published_at->lessThanOrEqualTo(now());
+    }
+
+    public function isPendingApproval(): bool
+    {
+        return $this->published_at === null;
+    }
+
+    public function isScheduled(): bool
+    {
+        return $this->published_at !== null && $this->published_at->greaterThan(now());
+    }
+
+    public function canBeEditedByAuthor(): bool
+    {
+        if (! $this->created_at) {
+            return true;
+        }
+
+        return now()->lt($this->created_at->copy()->addDay());
     }
 
     public function user(): BelongsTo
