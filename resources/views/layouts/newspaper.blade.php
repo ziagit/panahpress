@@ -2653,6 +2653,7 @@
                         <a href="{{ route('contact', ['locale' => $locale]) }}">{{ __('messages.footer_contact') }}</a>
                         <a href="{{ route('about', ['locale' => $locale]) }}">{{ __('messages.footer_about') }}</a>
                         <a href="{{ route('verify', ['locale' => $locale]) }}">{{ __('messages.footer_verify') }}</a>
+                        <a href="{{ route('login', ['locale' => $locale]) }}">{{ __('messages.login') }}</a>
                     </div>
                 </div>
 
