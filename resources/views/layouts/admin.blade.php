@@ -274,29 +274,29 @@
 
         .admin-pagination-wrapper {
             overflow-x: auto;
+            margin-top: 1rem;
         }
 
-        .pagination {
-            display: inline-flex;
+        .admin-pagination-wrapper nav[role="navigation"] {
+            width: 100%;
+        }
+
+        .admin-pagination-wrapper nav[role="navigation"] > div {
+            display: flex;
             flex-wrap: wrap;
-            gap: 0.35rem;
-            padding: 0;
-            margin: 0;
-            list-style: none;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.5rem;
         }
 
-        .pagination li {
-            margin: 0;
-        }
-
-        .pagination a,
-        .pagination span {
+        .admin-pagination-wrapper nav[role="navigation"] a,
+        .admin-pagination-wrapper nav[role="navigation"] span {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             min-width: 2.2rem;
-            height: 2.2rem;
-            padding: 0 0.75rem;
+            min-height: 2.2rem;
+            padding: 0 0.9rem;
             border-radius: 0.85rem;
             border: 1px solid rgba(15, 23, 42, 0.12);
             background: #fff;
@@ -304,25 +304,32 @@
             text-decoration: none;
             font-size: 0.95rem;
             font-weight: 600;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
         }
 
-        .pagination .active span,
-        .pagination .active a {
-            background: #0f172a;
-            color: #fff;
-            border-color: transparent;
+        .admin-pagination-wrapper nav[role="navigation"] span[aria-current="page"] span,
+        .admin-pagination-wrapper nav[role="navigation"] .inline-flex.items-center.px-4.py-2.text-sm.font-medium.text-gray-700.bg-gray-200 {
+            background: #0f172a !important;
+            color: #fff !important;
+            border-color: transparent !important;
         }
 
-        .pagination .disabled span,
-        .pagination .disabled a {
+        .admin-pagination-wrapper nav[role="navigation"] span[aria-disabled="true"],
+        .admin-pagination-wrapper nav[role="navigation"] .cursor-not-allowed {
             opacity: 0.45;
-            cursor: default;
-            background: #f8fafc;
+            cursor: not-allowed;
+            background: #f8fafc !important;
+            color: #64748b !important;
         }
 
-        .pagination a:hover {
+        .admin-pagination-wrapper nav[role="navigation"] a:hover {
             background: #eef2ff;
             border-color: rgba(59, 130, 246, 0.35);
+        }
+
+        .admin-pagination-wrapper nav[role="navigation"] svg {
+            width: 1rem;
+            height: 1rem;
         }
         .table th {
             background: #f8fafc;
