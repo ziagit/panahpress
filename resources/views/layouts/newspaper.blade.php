@@ -2100,7 +2100,7 @@
         .footer__inner {
             width: min(100%, 1360px);
             margin: 0 auto;
-            padding: 20px 14px 0;
+            padding: 40px 14px 0;
             position: relative;
         }
 

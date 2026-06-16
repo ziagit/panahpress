@@ -29,6 +29,17 @@
         <meta name="twitter:description" content="{{ $caption }}">
         <meta name="twitter:image" content="{{ $post->imageUrl() }}">
         <link rel="image_src" href="{{ $post->imageUrl() }}">
+        <style>
+            .post-author-meta--fa {
+                gap: 0.25rem;
+            }
+            .post-author-meta--en {
+                gap: 0.125rem;
+            }
+            .post-page {
+                margin-bottom: 3rem;
+            }
+        </style>
     @endpush
 
     <section class="post-page">
@@ -38,16 +49,21 @@
                     {{ $post->category?->name($locale) ?? __('messages.posts') }}
                 </div>
                 <h1 class="post-title">{{ $post->title($locale) }}</h1>
-                <div class="post-byline">
-                    @php
-                        $authorName = $post->user?->name ?: 'Staff Reporter';
-                    @endphp
-                    <span>{{ __('messages.by') }} {{ $authorName }}</span>
-                    <span>{{ $post->published_at?->translatedFormat('M d, Y') }}</span>
+                @php
+                    $authorName = $post->user?->name ?: 'Staff Reporter';
+                    $authorAvatar = optional($post->user)->avatarUrl() ?? asset('images/avatar.jpeg');
+                    $authorMetaClass = $locale === 'fa' ? 'post-author-meta--fa' : 'post-author-meta--en';
+                @endphp
+                <div class="post-byline" style="display:flex; align-items:center; gap:0.75rem; font-size:0.9375rem; color:#475569;">
+                    <img src="{{ $authorAvatar }}" alt="{{ $authorName }}" style="width:40px; height:40px; border-radius:9999px; object-fit:cover; display:block;" />
+                    <div class="{{ $authorMetaClass }}" style="display:flex; flex-direction:column; line-height:1;">
+                        <div style="margin:0;">{{ __('messages.by') }} {{ $authorName }}</div>
+                        <div style="margin:0;">{{ $post->published_at?->translatedFormat('M d, Y') }}</div>
+                    </div>
                 </div>
             </div>
 
-            <div class="post-share-row">
+            <div class="post-share-row" style="display:flex; align-items:center; justify-content:space-between;">
                 <div class="post-share" aria-label="Social share">
                     <a href="https://www.facebook.com/sharer/sharer.php?u={{ $shareUrlEncoded }}" class="facebook" aria-label="Facebook" target="_blank" rel="noopener noreferrer">f</a>
                     <a href="https://twitter.com/intent/tweet?url={{ $shareUrlEncoded }}&text={{ $shareTitle }}" class="x" aria-label="X" target="_blank" rel="noopener noreferrer">x</a>
@@ -61,9 +77,9 @@
                         id="post-share-copy"
                         class="post-share-copy"
                         data-share-url="{{ $shareUrl }}"
-                        aria-label="Share post link"
+                        aria-label="{{ __('messages.share') }}"
                     >
-                        <span class="post-share-copy__label">Share</span>
+                        <span class="post-share-copy__label">{{ __('messages.share') }}</span>
                     </button>
                 </div>
             </div>
@@ -98,16 +114,17 @@
                         }
 
                         const label = copyButton.querySelector('.post-share-copy__label');
-                        const defaultLabel = label ? label.textContent : 'Share';
+                        const defaultLabel = label ? label.textContent : '{{ __("messages.share") }}';
+                        const copiedLabel = '{{ __("messages.shared") }}';
 
                         copyButton.addEventListener('click', () => {
                             const shareUrl = copyButton.dataset.shareUrl || window.location.href;
 
                             navigator.clipboard.writeText(shareUrl).then(() => {
                                 if (label) {
-                                    label.textContent = 'Copied';
+                                    label.textContent = copiedLabel;
                                 } else {
-                                    copyButton.textContent = 'Copied';
+                                    copyButton.textContent = copiedLabel;
                                 }
                                 setTimeout(() => {
                                     if (label) {

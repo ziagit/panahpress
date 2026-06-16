@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App as AppFacade;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class AuthorController extends Controller
@@ -57,13 +58,21 @@ class AuthorController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8'],
+            'avatar' => ['nullable', 'image', 'max:10240'],
         ]);
+
+        $avatarPath = null;
+
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        }
 
         User::create([
             'name' => $attributes['name'],
             'email' => $attributes['email'],
             'password' => Hash::make($attributes['password']),
             'role' => 'author',
+            'avatar' => $avatarPath,
         ]);
 
         return Redirect::route('admin.authors.index', ['locale' => $locale])
@@ -89,10 +98,19 @@ class AuthorController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($author->id)],
             'password' => ['nullable', 'string', 'min:8'],
+            'avatar' => ['nullable', 'image', 'max:10240'],
         ]);
 
         $author->name = $attributes['name'];
         $author->email = $attributes['email'];
+
+        if ($request->hasFile('avatar')) {
+            if ($author->avatar) {
+                Storage::disk('public')->delete($author->avatar);
+            }
+
+            $author->avatar = $request->file('avatar')->store('avatars', 'public');
+        }
 
         if (! empty($attributes['password'])) {
             $author->password = Hash::make($attributes['password']);

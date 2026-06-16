@@ -1,4 +1,4 @@
-<form action="{{ $action }}" method="POST">
+<form action="{{ $action }}" method="POST" enctype="multipart/form-data">
     @csrf
     @if(in_array($method, ['PUT', 'PATCH', 'DELETE']))
         @method($method)
@@ -20,6 +20,14 @@
         <p class="editor-help">
             {{ $author ? __('messages.author_password_help_existing') : __('messages.author_password_help_new') }}
         </p>
+    </div>
+
+    <div class="form-field">
+        <label for="avatar">{{ __('messages.avatar') }}</label>
+        @if($author?->avatar)
+            <img src="{{ asset('storage/'.$author->avatar) }}" alt="{{ $author->name }}" style="max-width:120px; display:block; margin-bottom:0.75rem; border-radius:0;" />
+        @endif
+        <input id="avatar" type="file" name="avatar" accept="image/*" />
     </div>
 
     <div class="form-field">
