@@ -281,6 +281,10 @@
             width: 100%;
         }
 
+        .admin-pagination-wrapper nav[role="navigation"] p {
+            display: none;
+        }
+
         .admin-pagination-wrapper nav[role="navigation"] > div {
             display: flex;
             flex-wrap: wrap;
@@ -294,37 +298,38 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 2.2rem;
-            min-height: 2.2rem;
+            min-width: 2.4rem;
+            min-height: 2.4rem;
             padding: 0 0.9rem;
-            border-radius: 0.85rem;
-            border: 1px solid rgba(15, 23, 42, 0.12);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(148, 163, 184, 0.35);
             background: #fff;
-            color: #0f172a;
+            color: #334155;
             text-decoration: none;
-            font-size: 0.95rem;
+            font-size: 0.93rem;
             font-weight: 600;
             transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
         }
 
+        .admin-pagination-wrapper nav[role="navigation"] a:hover {
+            background: #f8fafc;
+            border-color: rgba(148, 163, 184, 0.5);
+        }
+
         .admin-pagination-wrapper nav[role="navigation"] span[aria-current="page"] span,
-        .admin-pagination-wrapper nav[role="navigation"] .inline-flex.items-center.px-4.py-2.text-sm.font-medium.text-gray-700.bg-gray-200 {
+        .admin-pagination-wrapper nav[role="navigation"] span[aria-current="page"] a {
             background: #0f172a !important;
             color: #fff !important;
             border-color: transparent !important;
         }
 
-        .admin-pagination-wrapper nav[role="navigation"] span[aria-disabled="true"],
+        .admin-pagination-wrapper nav[role="navigation"] span[aria-disabled="true"] span,
         .admin-pagination-wrapper nav[role="navigation"] .cursor-not-allowed {
-            opacity: 0.45;
+            opacity: 0.55;
             cursor: not-allowed;
-            background: #f8fafc !important;
+            background: #f1f5f9 !important;
             color: #64748b !important;
-        }
-
-        .admin-pagination-wrapper nav[role="navigation"] a:hover {
-            background: #eef2ff;
-            border-color: rgba(59, 130, 246, 0.35);
+            border-color: rgba(148, 163, 184, 0.35) !important;
         }
 
         .admin-pagination-wrapper nav[role="navigation"] svg {
