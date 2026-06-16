@@ -285,7 +285,11 @@
             display: none;
         }
 
-        .admin-pagination-wrapper nav[role="navigation"] > div {
+        .admin-pagination-wrapper nav[role="navigation"] > div:first-child {
+            display: none !important;
+        }
+
+        .admin-pagination-wrapper nav[role="navigation"] > div:last-child {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
@@ -293,8 +297,9 @@
             gap: 0.5rem;
         }
 
-        .admin-pagination-wrapper nav[role="navigation"] a,
-        .admin-pagination-wrapper nav[role="navigation"] span {
+        .admin-pagination-wrapper nav[role="navigation"] > div:last-child a,
+        .admin-pagination-wrapper nav[role="navigation"] > div:last-child span[aria-current="page"] span,
+        .admin-pagination-wrapper nav[role="navigation"] > div:last-child span[aria-disabled="true"] span {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -311,20 +316,18 @@
             transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
         }
 
-        .admin-pagination-wrapper nav[role="navigation"] a:hover {
+        .admin-pagination-wrapper nav[role="navigation"] > div:last-child a:hover {
             background: #f8fafc;
             border-color: rgba(148, 163, 184, 0.5);
         }
 
-        .admin-pagination-wrapper nav[role="navigation"] span[aria-current="page"] span,
-        .admin-pagination-wrapper nav[role="navigation"] span[aria-current="page"] a {
+        .admin-pagination-wrapper nav[role="navigation"] > div:last-child span[aria-current="page"] span {
             background: #0f172a !important;
             color: #fff !important;
             border-color: transparent !important;
         }
 
-        .admin-pagination-wrapper nav[role="navigation"] span[aria-disabled="true"] span,
-        .admin-pagination-wrapper nav[role="navigation"] .cursor-not-allowed {
+        .admin-pagination-wrapper nav[role="navigation"] > div:last-child span[aria-disabled="true"] span {
             opacity: 0.55;
             cursor: not-allowed;
             background: #f1f5f9 !important;
