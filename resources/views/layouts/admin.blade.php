@@ -275,6 +275,10 @@
         .admin-pagination-wrapper {
             overflow-x: auto;
             margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            background: #fff;
+            border-radius: 0.9rem;
+            border: 1px solid rgba(148, 163, 184, 0.18);
         }
 
         .admin-pagination-wrapper nav[role="navigation"] {
