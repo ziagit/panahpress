@@ -51,7 +51,7 @@
                 <h1 class="post-title">{{ $post->title($locale) }}</h1>
                 @php
                     $authorName = $post->user?->name ?: 'Staff Reporter';
-                    $authorAvatar = optional($post->user)->avatarUrl() ?? asset('images/avatar.jpeg');
+                    $authorAvatar = optional($post->user)->avatarUrl() ?? asset('storage/avatar.jpeg');
                     $authorMetaClass = $locale === 'fa' ? 'post-author-meta--fa' : 'post-author-meta--en';
                 @endphp
                 <div class="post-byline" style="display:flex; align-items:center; gap:0.75rem; font-size:0.9375rem; color:#475569;">
