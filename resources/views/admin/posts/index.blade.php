@@ -98,7 +98,7 @@
             </div>
         </div>
 
-        <div style="margin-top:1rem;">
+        <div class="admin-pagination-wrapper" style="margin-top:1rem;">
             {{ $posts->links() }}
         </div>
     </section>
