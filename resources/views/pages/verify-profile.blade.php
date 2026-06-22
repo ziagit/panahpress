@@ -369,7 +369,6 @@
                     </div>
                     <div class="verify-meta">
                         <span><strong>{{ __('messages.card_id') }}:</strong> <span class="verify-ltr">{{ $card->code }}</span></span>
-                        <span><strong>{{ __('messages.security_code') }}:</strong> <span class="verify-ltr">{{ $card->security_code }}</span></span>
                         <span><strong>{{ __('messages.birth_date') }}:</strong> <span class="verify-ltr">{{ $birthDate }}</span></span>
                     </div>
                 </section>

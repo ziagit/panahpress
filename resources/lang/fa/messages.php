@@ -67,7 +67,7 @@ return [
     'verify_field_value' => 'رهبری رسانه و روزنامه‌نگاری',
     'verify_location' => 'موقعیت',
     'verify_location_value' => 'بین‌المللی / دیاسپورا',
-    'verify_about_section' => 'بخش درباره',
+    'verify_about_section' => 'درباره',
     'verify_about_text' => 'پیشینه در روزنامه‌نگاری، مأموریت کار رسانه‌ای، نقش در ساخت پانا پرس، و تعهد به گزارش‌گری مستقل.',
     'verify_achievements' => 'دستاوردها',
     'verify_achievements_hint' => 'هر دستاورد در یک خط.',
