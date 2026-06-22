@@ -32,11 +32,26 @@
                         placeholder="{{ __('messages.verify_input_placeholder') }}"
                         aria-label="{{ __('messages.verify_code_label') }}"
                         autocomplete="off"
+                        maxlength="4"
+                        style="min-height: 50px; padding: 0 16px; border: 1px solid var(--line); background:#fff; font-size: 1rem;"
+                    >
+                </label>
+                <label style="display:grid; gap: 8px;">
+                    <span class="kicker">{{ __('messages.verify_security_code_label') }}</span>
+                    <input
+                        type="text"
+                        name="security_code"
+                        value="{{ old('security_code') }}"
+                        placeholder="{{ __('messages.verify_security_code_placeholder') }}"
+                        aria-label="{{ __('messages.verify_security_code_label') }}"
+                        autocomplete="off"
+                        inputmode="numeric"
+                        maxlength="6"
                         style="min-height: 50px; padding: 0 16px; border: 1px solid var(--line); background:#fff; font-size: 1rem;"
                     >
                 </label>
                 <div style="display:flex; justify-content:center;">
-                    <button type="submit" class="donate-btn" style="border-radius: 3px; min-width: 180px; min-height: 42px;">{{ __('messages.verify_lookup') }}</button>
+                    <button type="submit" class="donate-btn" style="border-radius: 3px; min-width: 180px; min-height: 42px;">{{ __('messages.verify_button') }}</button>
                 </div>
                 <p style="margin: 0; text-align:center; color:#64748b; font-size: 0.95rem;">
                     {{ __('messages.verify_help') }}

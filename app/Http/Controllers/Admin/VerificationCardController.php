@@ -19,11 +19,11 @@ class VerificationCardController extends Controller
         return $locale;
     }
 
-    protected function generateCode(): string
+    protected function generateSecurityCode(): string
     {
         do {
-            $code = 'P'.str_pad((string) random_int(0, 9999), 4, '0', STR_PAD_LEFT);
-        } while (VerificationCard::where('code', $code)->exists());
+            $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        } while (VerificationCard::where('security_code', $code)->exists());
 
         return $code;
     }
@@ -39,7 +39,8 @@ class VerificationCardController extends Controller
             $query->where(function ($builder) use ($search) {
                 $builder->where('full_name', 'like', '%'.$search.'%')
                     ->orWhere('occupation', 'like', '%'.$search.'%')
-                    ->orWhere('code', 'like', '%'.$search.'%');
+                    ->orWhere('code', 'like', '%'.$search.'%')
+                    ->orWhere('security_code', 'like', '%'.$search.'%');
             });
         }
 
@@ -60,13 +61,25 @@ class VerificationCardController extends Controller
         $locale = $this->setLocale($request);
 
         $attributes = $request->validate([
+            'code' => ['required', 'string', 'max:4', 'regex:/^P\d{3}$/', 'unique:verification_cards,code'],
+            'security_code' => ['nullable', 'string', 'regex:/^\d{6}$/'],
+            'profile_org' => ['nullable', 'string', 'max:255'],
+            'short_bio' => ['nullable', 'string'],
+            'current_position' => ['nullable', 'string', 'max:255'],
+            'field' => ['nullable', 'string', 'max:255'],
+            'location' => ['nullable', 'string', 'max:255'],
+            'about_text' => ['nullable', 'string'],
+            'achievements' => ['nullable', 'string'],
+            'timeline' => ['nullable', 'string'],
+            'quote_text' => ['nullable', 'string'],
             'full_name' => ['required', 'string', 'max:255'],
             'occupation' => ['required', 'string', 'max:255'],
             'birth_date' => ['required', 'date'],
             'photo' => ['required', 'image', 'max:10240'],
         ]);
 
-        $attributes['code'] = $this->generateCode();
+        $attributes['code'] = strtoupper(trim($attributes['code']));
+        $attributes['security_code'] = preg_replace('/\D/', '', (string) ($attributes['security_code'] ?? '')) ?: $this->generateSecurityCode();
         $attributes['issue_date'] = now()->toDateString();
         $attributes['expiry_date'] = now()->addYear()->toDateString();
 
@@ -92,11 +105,25 @@ class VerificationCardController extends Controller
         $locale = $this->setLocale($request);
 
         $attributes = $request->validate([
+            'code' => ['required', 'string', 'max:4', 'regex:/^P\d{3}$/', 'unique:verification_cards,code,'.$verification->id],
+            'security_code' => ['required', 'string', 'regex:/^\d{6}$/'],
+            'profile_org' => ['nullable', 'string', 'max:255'],
+            'short_bio' => ['nullable', 'string'],
+            'current_position' => ['nullable', 'string', 'max:255'],
+            'field' => ['nullable', 'string', 'max:255'],
+            'location' => ['nullable', 'string', 'max:255'],
+            'about_text' => ['nullable', 'string'],
+            'achievements' => ['nullable', 'string'],
+            'timeline' => ['nullable', 'string'],
+            'quote_text' => ['nullable', 'string'],
             'full_name' => ['required', 'string', 'max:255'],
             'occupation' => ['required', 'string', 'max:255'],
             'birth_date' => ['required', 'date'],
             'photo' => ['nullable', 'image', 'max:10240'],
         ]);
+
+        $attributes['code'] = strtoupper(trim($attributes['code']));
+        $attributes['security_code'] = preg_replace('/\D/', '', (string) $attributes['security_code']) ?: '';
 
         if ($request->hasFile('photo')) {
             if ($verification->photo) {

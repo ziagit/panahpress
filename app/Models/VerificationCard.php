@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\App as AppFacade;
 
 #[Fillable([
     'code',
+    'security_code',
+    'profile_org',
+    'short_bio',
+    'current_position',
+    'field',
+    'location',
+    'about_text',
+    'achievements',
+    'timeline',
+    'quote_text',
     'full_name',
     'occupation',
     'birth_date',
@@ -39,5 +49,17 @@ class VerificationCard extends Model
     public function displayOccupation(string $locale = null): string
     {
         return $this->occupation;
+    }
+
+    public function formattedCode(): string
+    {
+        return strtoupper(trim((string) $this->code));
+    }
+
+    public function formattedSecurityCode(): string
+    {
+        $code = preg_replace('/\D/', '', (string) $this->security_code) ?: '';
+
+        return $code === '' ? '' : substr($code, 0, 3).' '.substr($code, 3, 3);
     }
 }

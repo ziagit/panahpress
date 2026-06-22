@@ -108,7 +108,7 @@ Route::group([
         ->name('verify');
 
     Route::get('/verify/{verificationCard}', [VerificationController::class, 'show'])
-        ->where(['verificationCard' => 'P[0-9]{4}'])
+        ->where(['verificationCard' => 'P[0-9]{3}'])
         ->name('verify.show');
 
     Route::get('/donate', function (Request $request) {

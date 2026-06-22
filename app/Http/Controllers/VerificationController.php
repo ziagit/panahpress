@@ -31,24 +31,40 @@ class VerificationController extends Controller
             $code = 'P'.$code;
         }
 
-        return preg_match('/^P\d{4}$/', $code) ? $code : null;
+        return preg_match('/^P\d{3}$/', $code) ? $code : null;
+    }
+
+    protected function normalizeSecurityCode(string $code): ?string
+    {
+        $code = preg_replace('/\D/', '', trim($code)) ?: '';
+
+        if ($code === '') {
+            return null;
+        }
+
+        return preg_match('/^\d{6}$/', $code) ? $code : null;
     }
 
     public function index(Request $request)
     {
         $locale = $this->setLocale($request);
         $code = $request->query('code');
+        $securityCode = $request->query('security_code');
 
-        if ($code) {
-            $normalized = $this->normalizeCode($code);
+        if ($code || $securityCode) {
+            $normalized = $this->normalizeCode((string) $code);
+            $normalizedSecurityCode = $this->normalizeSecurityCode((string) $securityCode);
 
-            if ($normalized) {
-                $card = VerificationCard::where('code', $normalized)->first();
+            if ($normalized && $normalizedSecurityCode) {
+                $card = VerificationCard::where('code', $normalized)
+                    ->where('security_code', $normalizedSecurityCode)
+                    ->first();
 
                 if ($card) {
                     return redirect()->route('verify.show', [
                         'locale' => $locale,
                         'verificationCard' => $card,
+                        'securityCode' => $normalizedSecurityCode,
                     ]);
                 }
             }
@@ -65,7 +81,16 @@ class VerificationController extends Controller
     {
         $locale = $this->setLocale($request);
 
-        return view('pages.verify-card', [
+        $securityCode = $this->normalizeSecurityCode((string) $request->query('securityCode', ''));
+
+        if (! $securityCode || $securityCode !== $verificationCard->security_code) {
+            return redirect()
+                ->route('verify', ['locale' => $locale])
+                ->withInput($request->query())
+                ->withErrors(['code' => __('messages.verify_not_found')]);
+        }
+
+        return view('pages.verify-profile', [
             'locale' => $locale,
             'card' => $verificationCard,
         ]);
