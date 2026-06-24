@@ -390,7 +390,7 @@
         }
 
         .portfolio-footer-meta {
-            margin-top: 12px;
+            margin-top: 36px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -441,6 +441,15 @@
             .portfolio-gallery,
             .portfolio-contact {
                 grid-template-columns: 1fr;
+            }
+
+            .portfolio-gallery > :not(.portfolio-tile--more) {
+                display: none;
+            }
+
+            .portfolio-gallery .portfolio-tile--more {
+                min-height: 160px;
+                width: 100%;
             }
 
             .portfolio-avatar {
