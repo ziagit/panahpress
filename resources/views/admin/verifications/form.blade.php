@@ -25,18 +25,28 @@
     </div>
 
     <div class="form-field">
-        <label for="profile_org">{{ __('messages.verify_profile_org_label') }}</label>
-        <input id="profile_org" name="profile_org" value="{{ old('profile_org', $verification?->profile_org ?? '') }}" />
-    </div>
-
-    <div class="form-field">
         <label for="current_position">{{ __('messages.verify_current_position') }}</label>
         <input id="current_position" name="current_position" value="{{ old('current_position', $verification?->current_position ?? '') }}" />
     </div>
 
     <div class="form-field">
-        <label for="field">{{ __('messages.verify_field') }}</label>
-        <input id="field" name="field" value="{{ old('field', $verification?->field ?? '') }}" />
+        <label for="phone">{{ __('messages.contact_phone_label') }}</label>
+        <input id="phone" name="phone" value="{{ old('phone', $verification?->phone ?? '') }}" />
+    </div>
+
+    <div class="form-field">
+        <label for="email">{{ __('messages.contact_email_label') }}</label>
+        <input id="email" type="email" name="email" value="{{ old('email', $verification?->email ?? '') }}" />
+    </div>
+
+    <div class="form-field">
+        <label for="expertise">{{ __('messages.verify_expertise') }}</label>
+        <textarea id="expertise" name="expertise" rows="3" placeholder="{{ __('messages.verify_expertise_hint') }}">{{ old('expertise', $verification?->expertise ?? '') }}</textarea>
+    </div>
+
+    <div class="form-field">
+        <label for="languages">{{ __('messages.verify_languages') }}</label>
+        <textarea id="languages" name="languages" rows="3" placeholder="{{ __('messages.verify_languages_hint') }}">{{ old('languages', $verification?->languages ?? '') }}</textarea>
     </div>
 
     <div class="form-field">
@@ -50,23 +60,13 @@
     </div>
 
     <div class="form-field">
-        <label for="about_text">{{ __('messages.verify_about_section') }}</label>
-        <textarea id="about_text" name="about_text" rows="4">{{ old('about_text', $verification?->about_text ?? '') }}</textarea>
+        <label for="issue_date">{{ __('messages.issue_date') }}</label>
+        <input id="issue_date" type="date" name="issue_date" value="{{ old('issue_date', optional($verification?->issue_date)->format('Y-m-d') ?? now()->format('Y-m-d')) }}" />
     </div>
 
     <div class="form-field">
-        <label for="achievements">{{ __('messages.verify_achievements') }}</label>
-        <textarea id="achievements" name="achievements" rows="5" placeholder="{{ __('messages.verify_achievements_hint') }}">{{ old('achievements', $verification?->achievements ?? '') }}</textarea>
-    </div>
-
-    <div class="form-field">
-        <label for="timeline">{{ __('messages.verify_timeline') }}</label>
-        <textarea id="timeline" name="timeline" rows="4" placeholder="{{ __('messages.verify_timeline_hint') }}">{{ old('timeline', $verification?->timeline ?? '') }}</textarea>
-    </div>
-
-    <div class="form-field">
-        <label for="quote_text">{{ __('messages.verify_quote_section') }}</label>
-        <textarea id="quote_text" name="quote_text" rows="3">{{ old('quote_text', $verification?->quote_text ?? '') }}</textarea>
+        <label for="expiry_date">{{ __('messages.expiry_date') }}</label>
+        <input id="expiry_date" type="date" name="expiry_date" value="{{ old('expiry_date', optional($verification?->expiry_date)->format('Y-m-d') ?? now()->addYear()->format('Y-m-d')) }}" />
     </div>
 
     <div class="form-field">
@@ -82,6 +82,21 @@
             </div>
         @endif
         <input id="photo" type="file" name="photo" accept="image/*" @if(!$verification) required @endif />
+    </div>
+
+    <div class="form-field">
+        <label for="gallery_photos">{{ __('messages.verify_gallery_upload') }}</label>
+        <input id="gallery_photos" type="file" name="gallery_photos[]" accept="image/*" multiple />
+        <p class="text-muted" style="margin-top:.45rem;">{{ __('messages.verify_gallery_upload_hint') }}</p>
+        @if($verification?->galleryPhotos?->count())
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:.75rem; margin-top:.85rem;">
+                @foreach($verification->galleryPhotos as $galleryPhoto)
+                    <figure style="margin:0;">
+                        <img src="{{ asset('storage/'.$galleryPhoto->path) }}" alt="{{ $verification->full_name }} gallery photo" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:10px; border:1px solid rgba(23,23,23,.12);">
+                    </figure>
+                @endforeach
+            </div>
+        @endif
     </div>
 
     <div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center; margin-top:1rem;">

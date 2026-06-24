@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\VerificationCard;
+use App\Models\VerificationCardPhoto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App as AppFacade;
 use Illuminate\Support\Facades\Redirect;
@@ -26,6 +27,29 @@ class VerificationCardController extends Controller
         } while (VerificationCard::where('security_code', $code)->exists());
 
         return $code;
+    }
+
+    protected function storeGalleryPhotos(Request $request, VerificationCard $verification): void
+    {
+        if (! $request->hasFile('gallery_photos')) {
+            return;
+        }
+
+        $nextOrder = (int) $verification->galleryPhotos()->max('sort_order');
+
+        foreach ((array) $request->file('gallery_photos') as $photo) {
+            if (! $photo) {
+                continue;
+            }
+
+            $path = $photo->store('verification-cards/gallery', 'public');
+
+            VerificationCardPhoto::create([
+                'verification_card_id' => $verification->id,
+                'path' => $path,
+                'sort_order' => ++$nextOrder,
+            ]);
+        }
     }
 
     public function index(Request $request)
@@ -63,31 +87,36 @@ class VerificationCardController extends Controller
         $attributes = $request->validate([
             'code' => ['required', 'string', 'max:4', 'regex:/^P\d{3}$/', 'unique:verification_cards,code'],
             'security_code' => ['nullable', 'string', 'regex:/^\d{6}$/'],
-            'profile_org' => ['nullable', 'string', 'max:255'],
-            'short_bio' => ['nullable', 'string'],
-            'current_position' => ['nullable', 'string', 'max:255'],
-            'field' => ['nullable', 'string', 'max:255'],
-            'location' => ['nullable', 'string', 'max:255'],
-            'about_text' => ['nullable', 'string'],
-            'achievements' => ['nullable', 'string'],
-            'timeline' => ['nullable', 'string'],
-            'quote_text' => ['nullable', 'string'],
-            'full_name' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255'],
             'occupation' => ['required', 'string', 'max:255'],
+            'full_name' => ['required', 'string', 'max:255'],
             'birth_date' => ['required', 'date'],
             'photo' => ['required', 'image', 'max:10240'],
+            'gallery_photos' => ['nullable', 'array'],
+            'gallery_photos.*' => ['image', 'max:10240'],
+            'issue_date' => ['nullable', 'date'],
+            'expiry_date' => ['nullable', 'date'],
+            'short_bio' => ['nullable', 'string'],
+            'current_position' => ['nullable', 'string', 'max:255'],
+            'expertise' => ['nullable', 'string'],
+            'languages' => ['nullable', 'string'],
+            'location' => ['nullable', 'string', 'max:255'],
         ]);
 
         $attributes['code'] = strtoupper(trim($attributes['code']));
         $attributes['security_code'] = preg_replace('/\D/', '', (string) ($attributes['security_code'] ?? '')) ?: $this->generateSecurityCode();
-        $attributes['issue_date'] = now()->toDateString();
-        $attributes['expiry_date'] = now()->addYear()->toDateString();
+        $attributes['issue_date'] = $attributes['issue_date'] ?? now()->toDateString();
+        $attributes['expiry_date'] = $attributes['expiry_date'] ?? now()->addYear()->toDateString();
 
         if ($request->hasFile('photo')) {
             $attributes['photo'] = $request->file('photo')->store('verification-cards', 'public');
         }
 
-        VerificationCard::create($attributes);
+        unset($attributes['gallery_photos']);
+
+        $verification = VerificationCard::create($attributes);
+        $this->storeGalleryPhotos($request, $verification);
 
         return Redirect::route('admin.verifications.index', ['locale' => $locale])
             ->with('success', __('messages.verification_card_saved'));
@@ -107,19 +136,21 @@ class VerificationCardController extends Controller
         $attributes = $request->validate([
             'code' => ['required', 'string', 'max:4', 'regex:/^P\d{3}$/', 'unique:verification_cards,code,'.$verification->id],
             'security_code' => ['required', 'string', 'regex:/^\d{6}$/'],
-            'profile_org' => ['nullable', 'string', 'max:255'],
-            'short_bio' => ['nullable', 'string'],
-            'current_position' => ['nullable', 'string', 'max:255'],
-            'field' => ['nullable', 'string', 'max:255'],
-            'location' => ['nullable', 'string', 'max:255'],
-            'about_text' => ['nullable', 'string'],
-            'achievements' => ['nullable', 'string'],
-            'timeline' => ['nullable', 'string'],
-            'quote_text' => ['nullable', 'string'],
-            'full_name' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255'],
             'occupation' => ['required', 'string', 'max:255'],
+            'full_name' => ['required', 'string', 'max:255'],
             'birth_date' => ['required', 'date'],
             'photo' => ['nullable', 'image', 'max:10240'],
+            'gallery_photos' => ['nullable', 'array'],
+            'gallery_photos.*' => ['image', 'max:10240'],
+            'issue_date' => ['nullable', 'date'],
+            'expiry_date' => ['nullable', 'date'],
+            'short_bio' => ['nullable', 'string'],
+            'current_position' => ['nullable', 'string', 'max:255'],
+            'expertise' => ['nullable', 'string'],
+            'languages' => ['nullable', 'string'],
+            'location' => ['nullable', 'string', 'max:255'],
         ]);
 
         $attributes['code'] = strtoupper(trim($attributes['code']));
@@ -133,7 +164,10 @@ class VerificationCardController extends Controller
             $attributes['photo'] = $request->file('photo')->store('verification-cards', 'public');
         }
 
+        unset($attributes['gallery_photos']);
+
         $verification->update($attributes);
+        $this->storeGalleryPhotos($request, $verification);
 
         return Redirect::route('admin.verifications.index', ['locale' => $locale])
             ->with('success', __('messages.verification_card_saved'));
@@ -146,6 +180,10 @@ class VerificationCardController extends Controller
         if ($verification->photo) {
             Storage::disk('public')->delete($verification->photo);
         }
+
+        $verification->galleryPhotos->each(function (VerificationCardPhoto $photo) {
+            Storage::disk('public')->delete($photo->path);
+        });
 
         $verification->delete();
 

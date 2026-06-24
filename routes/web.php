@@ -111,6 +111,10 @@ Route::group([
         ->where(['verificationCard' => 'P[0-9]{3}'])
         ->name('verify.show');
 
+    Route::get('/verify/{verificationCard}/gallery', [VerificationController::class, 'gallery'])
+        ->where(['verificationCard' => 'P[0-9]{3}'])
+        ->name('verify.gallery');
+
     Route::get('/donate', function (Request $request) {
         $locale = $request->route('locale') ?: 'en';
         app()->setLocale($locale);

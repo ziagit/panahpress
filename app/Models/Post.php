@@ -138,7 +138,13 @@ class Post extends Model
 
         $videoId = $this->extractYoutubeId($source);
 
-        return $videoId ? 'https://img.youtube.com/vi/'.$videoId.'/hqdefault.jpg' : null;
+        if ($videoId) {
+            return 'https://img.youtube.com/vi/'.$videoId.'/hqdefault.jpg';
+        }
+
+        $vimeoId = $this->extractVimeoId($source);
+
+        return $vimeoId ? 'https://vumbnail.com/'.$vimeoId.'.jpg' : null;
     }
 
     public function renderedContent(string $locale = null): string
@@ -271,6 +277,21 @@ class Post extends Model
         }
 
         if (preg_match('#youtube\.com/live/([A-Za-z0-9_-]{6,})#i', $value, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+
+    protected function extractVimeoId(string $value): ?string
+    {
+        $value = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        if (preg_match('#vimeo\.com/(?:video/)?([0-9]+)#i', $value, $matches)) {
+            return $matches[1];
+        }
+
+        if (preg_match('#player\.vimeo\.com/video/([0-9]+)#i', $value, $matches)) {
             return $matches[1];
         }
 

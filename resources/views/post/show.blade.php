@@ -7,6 +7,7 @@
         $relatedCards = $relatedArticles->take(3);
         $caption = \Illuminate\Support\Str::limit($post->plainContent($locale), 130);
         $videoUrl = $post->videoWatchUrl($locale);
+        $videoThumbnailUrl = $post->videoThumbnailUrl($locale);
         $shareUrl = route('posts.show', ['locale' => $locale, 'post' => $post->slug]);
         $shareUrlEncoded = urlencode($shareUrl);
         $shareTitle = urlencode($post->title($locale));
@@ -93,9 +94,16 @@
 
             @if($videoUrl)
                 <figure class="post-video">
-                    <a href="{{ $videoUrl }}" target="_blank" rel="noopener noreferrer" class="post-video__link post-video__link--text">
-                        <span class="post-video__link-label">Watch video</span>
-                        <span class="post-video__link-url">{{ $videoUrl }}</span>
+                    <a href="{{ $videoUrl }}" target="_blank" rel="noopener noreferrer" class="post-video__link" aria-label="Watch video in a new tab">
+                        @if($videoThumbnailUrl)
+                            <img src="{{ $videoThumbnailUrl }}" alt="{{ $post->title($locale) }} video thumbnail" loading="lazy">
+                        @else
+                            <span class="post-video__fallback" aria-hidden="true">
+                                <span class="post-video__fallback-icon"></span>
+                                <span class="post-video__fallback-text">Video</span>
+                            </span>
+                        @endif
+                        <span class="post-video__badge">Watch video</span>
                     </a>
                 </figure>
             @endif

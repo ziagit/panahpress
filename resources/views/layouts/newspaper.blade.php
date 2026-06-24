@@ -1709,6 +1709,7 @@
 
         .post-video {
             margin: 1.25rem 0 0;
+            width: min(100%, 320px);
         }
 
         .post-video__link {
@@ -1720,16 +1721,6 @@
             background: #0f172a;
         }
 
-        .post-video__link--text {
-            padding: 16px 18px;
-            background: #f8fafc;
-            border-color: #dbe2ea;
-            color: #0f172a;
-            text-decoration: none;
-            display: grid;
-            gap: 6px;
-        }
-
         .post-video__link img {
             width: 100%;
             aspect-ratio: 16 / 9;
@@ -1737,6 +1728,43 @@
             margin: 0;
             display: block;
             opacity: 0.9;
+        }
+
+        .post-video__fallback {
+            display: grid;
+            place-items: center;
+            gap: 10px;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background:
+                radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.12), transparent 42%),
+                linear-gradient(135deg, #0f172a, #1e3a8a);
+            color: #fff;
+        }
+
+        .post-video__fallback-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.16);
+            position: relative;
+        }
+
+        .post-video__fallback-icon::before {
+            content: "";
+            position: absolute;
+            left: 22px;
+            top: 18px;
+            border-left: 18px solid #fff;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+
+        .post-video__fallback-text {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
         }
 
         .post-video__badge {

@@ -5,20 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\App as AppFacade;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
     'code',
     'security_code',
-    'profile_org',
     'short_bio',
     'current_position',
-    'field',
+    'phone',
+    'email',
+    'expertise',
+    'languages',
     'location',
-    'about_text',
-    'achievements',
-    'timeline',
-    'quote_text',
     'full_name',
     'occupation',
     'birth_date',
@@ -61,5 +59,10 @@ class VerificationCard extends Model
         $code = preg_replace('/\D/', '', (string) $this->security_code) ?: '';
 
         return $code === '' ? '' : substr($code, 0, 3).' '.substr($code, 3, 3);
+    }
+
+    public function galleryPhotos(): HasMany
+    {
+        return $this->hasMany(VerificationCardPhoto::class)->orderBy('sort_order')->orderBy('id');
     }
 }

@@ -45,6 +45,39 @@ class VerificationController extends Controller
         return preg_match('/^\d{6}$/', $code) ? $code : null;
     }
 
+    protected function buildGalleryImages(VerificationCard $card): array
+    {
+        $images = $card->galleryPhotos()
+            ->get()
+            ->map(fn ($photo) => asset('storage/'.$photo->path))
+            ->all();
+
+        if ($images === [] && $card->photo) {
+            $images[] = asset('storage/'.$card->photo);
+        }
+
+        $fallbacks = [
+            asset('images/home/placeholder-01.svg'),
+            asset('images/home/placeholder-02.svg'),
+            asset('images/home/placeholder-03.svg'),
+            asset('images/home/placeholder-04.svg'),
+            asset('images/home/placeholder-05.svg'),
+            asset('images/home/placeholder-06.svg'),
+            asset('images/home/placeholder-07.svg'),
+            asset('images/home/placeholder-08.svg'),
+        ];
+
+        foreach ($fallbacks as $fallback) {
+            if (count($images) >= 8) {
+                break;
+            }
+
+            $images[] = $fallback;
+        }
+
+        return array_slice($images, 0, 8);
+    }
+
     public function index(Request $request)
     {
         $locale = $this->setLocale($request);
@@ -93,6 +126,27 @@ class VerificationController extends Controller
         return view('pages.verify-profile', [
             'locale' => $locale,
             'card' => $verificationCard,
+            'galleryImages' => $this->buildGalleryImages($verificationCard),
+        ]);
+    }
+
+    public function gallery(Request $request, $locale, VerificationCard $verificationCard)
+    {
+        $locale = $this->setLocale($request);
+
+        $securityCode = $this->normalizeSecurityCode((string) $request->query('securityCode', ''));
+
+        if (! $securityCode || $securityCode !== $verificationCard->security_code) {
+            return redirect()
+                ->route('verify', ['locale' => $locale])
+                ->withInput($request->query())
+                ->withErrors(['code' => __('messages.verify_not_found')]);
+        }
+
+        return view('pages.verify-gallery', [
+            'locale' => $locale,
+            'card' => $verificationCard,
+            'galleryImages' => $this->buildGalleryImages($verificationCard),
         ]);
     }
 }
