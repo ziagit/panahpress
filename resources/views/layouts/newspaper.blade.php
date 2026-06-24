@@ -1709,7 +1709,7 @@
 
         .post-video {
             margin: 1.25rem 0 0;
-            width: min(100%, 320px);
+            width: min(100%, 140px);
         }
 
         .post-video__link {
@@ -1723,7 +1723,7 @@
 
         .post-video__link img {
             width: 100%;
-            aspect-ratio: 16 / 9;
+            aspect-ratio: 1 / 1;
             object-fit: cover;
             margin: 0;
             display: block;
@@ -1735,7 +1735,7 @@
             place-items: center;
             gap: 10px;
             width: 100%;
-            aspect-ratio: 16 / 9;
+            aspect-ratio: 1 / 1;
             background:
                 radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.12), transparent 42%),
                 linear-gradient(135deg, #0f172a, #1e3a8a);
@@ -2508,6 +2508,10 @@
 
             .home-ad-banner__image {
                 aspect-ratio: 16 / 9;
+            }
+
+            .post-video {
+                width: min(100%, 130px);
             }
 
             .logo-row__side--right {
