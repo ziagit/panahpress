@@ -11,6 +11,7 @@
         @font-face {
             font-family: 'Dirooz WOL';
             src: url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff2') }}?v={{ $diroozWolVersion }}") format('woff2'),
+                 url("/fonts/dirooz/Without-Latin/Dirooz-WOL.woff2?v={{ $diroozWolVersion }}") format('woff2'),
                  url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff') }}?v={{ $diroozWolVersion }}") format('woff');
             font-weight: 400;
             font-style: normal;
@@ -20,6 +21,7 @@
         @font-face {
             font-family: 'Dirooz WOL';
             src: url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff2') }}?v={{ $diroozWolVersion }}") format('woff2'),
+                 url("/fonts/dirooz/Without-Latin/Dirooz-WOL.woff2?v={{ $diroozWolVersion }}") format('woff2'),
                  url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff') }}?v={{ $diroozWolVersion }}") format('woff');
             font-weight: 700;
             font-style: normal;
