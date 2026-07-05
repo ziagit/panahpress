@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AuthorController as AdminAuthorController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\VerificationCardController as AdminVerificationCardController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\CategoryController;
@@ -103,6 +104,9 @@ Route::group([
             'locale' => $locale,
         ]);
     })->name('contact');
+
+    Route::post('/contact', [ContactController::class, 'store'])
+        ->name('contact.send');
 
     Route::get('/verify', [VerificationController::class, 'index'])
         ->name('verify');
