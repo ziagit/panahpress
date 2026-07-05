@@ -10,6 +10,24 @@
     <meta property="og:site_name" content="{{ __('messages.site_name') }}">
     @stack('head')
     <style>
+        @font-face {
+            font-family: 'Dirooz WOL';
+            src: url('/fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff2') format('woff2'),
+                 url('/fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Dirooz WOL';
+            src: url('/fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff2') format('woff2'),
+                 url('/fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff') format('woff');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
         :root {
             --paper-bg: #ffffff;
             --ink: #1b1f24;
@@ -23,8 +41,17 @@
             --blue-section: #0b8cbf;
             --blue-section-dark: #096f99;
             --footer: #13233a;
-            --serif: Georgia, "Times New Roman", Times, serif;
-            --sans: Arial, Helvetica, sans-serif;
+            --serif-base: Georgia, "Times New Roman", Times, serif;
+            --sans-base: Arial, Helvetica, sans-serif;
+            --serif: var(--serif-base);
+            --sans: var(--sans-base);
+            --serif-fa: 'Dirooz WOL', var(--serif-base);
+            --sans-fa: 'Dirooz WOL', var(--sans-base);
+        }
+
+        html[lang="fa"] {
+            --serif: var(--serif-fa);
+            --sans: var(--sans-fa);
         }
 
         * { box-sizing: border-box; }

@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title ?? __('messages.site_name') }}</title>
     <style>
+        @font-face {
+            font-family: 'Dirooz WOL';
+            src: url('/fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff2') format('woff2'),
+                 url('/fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Dirooz WOL';
+            src: url('/fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff2') format('woff2'),
+                 url('/fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff') format('woff');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
         :root {
             color-scheme: light;
             --brand-navy: #0f3b7a;
@@ -15,16 +33,21 @@
             --page-bg: #f8fafc;
             --text: #0f172a;
             --muted: #64748b;
+            --sans-base: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --sans: var(--sans-base);
+            --sans-fa: 'Dirooz WOL', var(--sans-base);
             color: var(--text);
             background: var(--page-bg);
-            font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: var(--sans);
             font-size: 16px;
             line-height: 1.6;
         }
 
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
+        html[lang="fa"] { --sans: var(--sans-fa); }
         body { margin: 0; min-height: 100vh; background: var(--page-bg); color: var(--text); }
+        body { font-family: var(--sans); }
         html[dir="rtl"] body { direction: rtl; }
         img { max-width: 100%; display: block; }
         a { color: inherit; text-decoration: none; }
