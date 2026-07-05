@@ -7,8 +7,8 @@
     <style>
         @font-face {
             font-family: 'Dirooz WOL';
-            src: url('/fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff2') format('woff2'),
-                 url('/fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff') format('woff');
+            src: url("{{ asset('fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff2') }}") format('woff2'),
+                 url("{{ asset('fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff') }}") format('woff');
             font-weight: 400;
             font-style: normal;
             font-display: swap;
@@ -16,8 +16,8 @@
 
         @font-face {
             font-family: 'Dirooz WOL';
-            src: url('/fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff2') format('woff2'),
-                 url('/fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff') format('woff');
+            src: url("{{ asset('fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff2') }}") format('woff2'),
+                 url("{{ asset('fonts/dirooz-font-v0.2.1/Without-Latin/Dirooz-WOL.woff') }}") format('woff');
             font-weight: 700;
             font-style: normal;
             font-display: swap;
@@ -48,6 +48,10 @@
         html[lang="fa"] { --sans: var(--sans-fa); }
         body { margin: 0; min-height: 100vh; background: var(--page-bg); color: var(--text); }
         body { font-family: var(--sans); }
+        html[lang="fa"] body,
+        html[lang="fa"] body * {
+            font-family: 'Dirooz WOL', var(--sans-base);
+        }
         html[dir="rtl"] body { direction: rtl; }
         img { max-width: 100%; display: block; }
         a { color: inherit; text-decoration: none; }
