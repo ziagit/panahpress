@@ -10,10 +10,13 @@
     <meta property="og:site_name" content="{{ __('messages.site_name') }}">
     @stack('head')
     <style>
+        @php
+            $diroozWolVersion = @filemtime(public_path('fonts/dirooz/Without-Latin/Dirooz-WOL.woff2')) ?: time();
+        @endphp
         @font-face {
             font-family: 'Dirooz WOL';
-            src: url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff2') }}") format('woff2'),
-                 url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff') }}") format('woff');
+            src: url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff2') }}?v={{ $diroozWolVersion }}") format('woff2'),
+                 url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff') }}?v={{ $diroozWolVersion }}") format('woff');
             font-weight: 400;
             font-style: normal;
             font-display: swap;
@@ -21,8 +24,8 @@
 
         @font-face {
             font-family: 'Dirooz WOL';
-            src: url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff2') }}") format('woff2'),
-                 url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff') }}") format('woff');
+            src: url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff2') }}?v={{ $diroozWolVersion }}") format('woff2'),
+                 url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff') }}?v={{ $diroozWolVersion }}") format('woff');
             font-weight: 700;
             font-style: normal;
             font-display: swap;
