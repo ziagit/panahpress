@@ -11,23 +11,23 @@
     @stack('head')
     <style>
         @php
-            $iransansRegularPath = public_path('fonts/IRANSans/IRANSans Regular/IRANSans Regular.ttf');
-            $iransansMediumPath = public_path('fonts/IRANSans/IRANSans Medium/IRANSans Medium.ttf');
-            $iransansVersion = @filemtime($iransansRegularPath) ?: time();
-            $iransansRegularUrl = str_replace(' ', '%20', asset('fonts/IRANSans/IRANSans Regular/IRANSans Regular.ttf')).'?v='.$iransansVersion;
-            $iransansMediumUrl = str_replace(' ', '%20', asset('fonts/IRANSans/IRANSans Medium/IRANSans Medium.ttf')).'?v='.$iransansVersion;
+            $xbNiloofarRegularPath = public_path('fonts/xb-niloofar/XB Niloofar Regular_23326.ttf');
+            $xbNiloofarBoldPath = public_path('fonts/xb-niloofar/XB Niloofar Bold_23327.ttf');
+            $xbNiloofarVersion = @filemtime($xbNiloofarRegularPath) ?: time();
+            $xbNiloofarRegularUrl = str_replace(' ', '%20', asset('fonts/xb-niloofar/XB Niloofar Regular_23326.ttf')).'?v='.$xbNiloofarVersion;
+            $xbNiloofarBoldUrl = str_replace(' ', '%20', asset('fonts/xb-niloofar/XB Niloofar Bold_23327.ttf')).'?v='.$xbNiloofarVersion;
         @endphp
         @font-face {
-            font-family: 'IRANSans';
-            src: url("{{ $iransansRegularUrl }}") format('truetype');
+            font-family: 'XB Niloofar';
+            src: url("{{ $xbNiloofarRegularUrl }}") format('truetype');
             font-weight: 400;
             font-style: normal;
             font-display: swap;
         }
 
         @font-face {
-            font-family: 'IRANSans';
-            src: url("{{ $iransansMediumUrl }}") format('truetype');
+            font-family: 'XB Niloofar';
+            src: url("{{ $xbNiloofarBoldUrl }}") format('truetype');
             font-weight: 700;
             font-style: normal;
             font-display: swap;
@@ -46,7 +46,7 @@
             --blue-section: #0b8cbf;
             --blue-section-dark: #096f99;
             --footer: #13233a;
-            --iransans: 'IRANSans', Arial, Helvetica, sans-serif;
+            --iransans: 'XB Niloofar', Arial, Helvetica, sans-serif;
             --serif-base: var(--iransans);
             --sans-base: var(--iransans);
             --serif: var(--iransans);
@@ -56,6 +56,9 @@
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         html { overflow-x: clip; }
+        html[lang="fa"] {
+            font-size: 18px;
+        }
         body {
             margin: 0;
             min-height: 100vh;
@@ -64,7 +67,12 @@
             font-family: var(--sans);
             overflow-x: clip;
         }
-        html[lang="fa"] :is(h1, h2, h3, h4, h5, h6) {
+        html[lang="fa"] h1,
+        html[lang="fa"] h2,
+        html[lang="fa"] h3,
+        html[lang="fa"] h4,
+        html[lang="fa"] h5,
+        html[lang="fa"] h6 {
             line-height: 1.35 !important;
         }
         img { display: block; max-width: 100%; }
@@ -1901,6 +1909,26 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+        }
+
+        html[lang="fa"] .post-sidebar .sidebar-box__title {
+            font-size: 15px;
+        }
+
+        html[lang="fa"] .post-sidebar__latest-featured-title {
+            font-size: 20px;
+        }
+
+        html[lang="fa"] .post-sidebar__latest-featured-excerpt {
+            font-size: 13px;
+        }
+
+        html[lang="fa"] .post-sidebar__latest-item-meta {
+            font-size: 9px;
+        }
+
+        html[lang="fa"] .post-sidebar__latest-item-title {
+            font-size: 14px;
         }
 
         .post-related-header {

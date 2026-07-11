@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ __('messages.contact_email_subject') }}</title>
 </head>
-<body style="margin:0; padding:24px; background:#f8fafc; color:#11161c; font-family: Arial, Helvetica, sans-serif;">
+<body style="margin:0; padding:24px; background:#f8fafc; color:#11161c; font-family: 'XB Niloofar', sans-serif;">
     <div style="max-width:640px; margin:0 auto; background:#fff; border:1px solid #e1e4e8; padding:24px;">
         <h1 style="margin:0 0 16px; font-size:24px; line-height:1.2;">{{ __('messages.contact_email_subject') }}</h1>
 

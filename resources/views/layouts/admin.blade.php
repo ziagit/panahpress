@@ -9,14 +9,17 @@
             color-scheme: light;
             color: #0f172a;
             background: #f1f5f9;
-            --iransans: 'IRANSans', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --iransans: 'XB Niloofar', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             font-family: var(--iransans);
-            font-size: 16px;
+            font-size: 17px;
             line-height: 1.6;
         }
 
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
+        html[lang="fa"] {
+            font-size: 18px;
+        }
         html[lang="fa"] :is(h1, h2, h3, h4, h5, h6) {
             line-height: 1.35 !important;
         }
