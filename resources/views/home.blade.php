@@ -19,19 +19,37 @@
 @section('content')
     <div class="news-home">
         <section class="hero-grid" id="top-stories">
-            <article class="story-spotlight">
-                <a href="{{ data_get($featuredLead, 'url', '#') }}" class="story-spotlight__image">
-                    <img src="{{ data_get($featuredLead, 'image', '') }}" alt="{{ data_get($featuredLead, 'title', '') }}">
+            @php
+                $heroStoryItems = collect($heroStories ?? []);
+                $heroStory = $heroStoryItems->first() ?? $featuredLead;
+                $heroStoryPayload = $heroStoryItems->isNotEmpty() ? $heroStoryItems : collect([$heroStory]);
+                $heroStoriesJson = htmlspecialchars(json_encode($heroStoryPayload->toArray(), JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
+            @endphp
+
+            <article
+                class="story-spotlight"
+                data-hero-story-spotlight
+                data-hero-stories="{!! $heroStoriesJson !!}"
+                data-hero-interval="6500"
+            >
+                <a href="{{ data_get($heroStory, 'url', '#') }}" class="story-spotlight__image" data-hero-image-link>
+                    <img
+                        src="{{ data_get($heroStory, 'image', '') }}"
+                        alt="{{ data_get($heroStory, 'title', '') }}"
+                        data-hero-image
+                    >
                 </a>
                 <div class="story-spotlight__content">
-                    <div class="kicker">{{ data_get($featuredLead, 'category', 'Politics') }}</div>
+                    <div class="kicker" data-hero-category>{{ data_get($heroStory, 'category', 'Politics') }}</div>
                     <h1 class="story-title">
-                        <a href="{{ data_get($featuredLead, 'url', '#') }}">{{ data_get($featuredLead, 'title', '') }}</a>
+                        <a href="{{ data_get($heroStory, 'url', '#') }}" data-hero-title-link>
+                            <span data-hero-title>{{ data_get($heroStory, 'title', '') }}</span>
+                        </a>
                     </h1>
-                    <p class="story-summary">{{ data_get($featuredLead, 'summary', '') }}</p>
+                    <p class="story-summary" data-hero-summary>{{ data_get($heroStory, 'summary', '') }}</p>
                     <div class="story-spotlight__meta">
-                        <span class="story-meta">{{ data_get($featuredLead, 'date', '') }}</span>
-                        <span class="story-meta">{{ data_get($featuredLead, 'author', 'Staff Reporter') }}</span>
+                        <span class="story-meta" data-hero-date>{{ data_get($heroStory, 'date', '') }}</span>
+                        <span class="story-meta" data-hero-author>{{ data_get($heroStory, 'author', 'Staff Reporter') }}</span>
                     </div>
                 </div>
             </article>
@@ -61,7 +79,7 @@
             <aside
                 class="hero-live-card"
                 aria-label="{{ __('messages.live_tv') }}"
-                data-hero-videos="{{ $heroVideosJson }}"
+                data-hero-videos="{!! $heroVideosJson !!}"
                 data-unmute-label="{{ __('messages.unmute') }}"
                 data-mute-label="{{ __('messages.mute') }}"
             >
@@ -457,6 +475,118 @@
                         window.clearInterval(refreshTimer);
                     }
                 });
+            })();
+        </script>
+
+        <script>
+            (() => {
+                const heroSpotlight = document.querySelector('[data-hero-story-spotlight]');
+                const heroStories = heroSpotlight ? JSON.parse(heroSpotlight.dataset.heroStories || '[]') : [];
+
+                if (heroSpotlight && heroStories.length > 1) {
+                    const imageLink = heroSpotlight.querySelector('[data-hero-image-link]');
+                    const image = heroSpotlight.querySelector('[data-hero-image]');
+                    const titleLink = heroSpotlight.querySelector('[data-hero-title-link]');
+                    const title = heroSpotlight.querySelector('[data-hero-title]');
+                    const summary = heroSpotlight.querySelector('[data-hero-summary]');
+                    const category = heroSpotlight.querySelector('[data-hero-category]');
+                    const date = heroSpotlight.querySelector('[data-hero-date]');
+                    const author = heroSpotlight.querySelector('[data-hero-author]');
+                    const interval = Number(heroSpotlight.dataset.heroInterval || 6500);
+
+                    let activeIndex = 0;
+                    let transitionTimer = null;
+                    let isTransitioning = false;
+
+                    const applyStory = (story) => {
+                        if (!story) {
+                            return;
+                        }
+
+                        const storyUrl = story.url || '#';
+                        const storyImage = story.image || '';
+                        const storyTitle = story.title || '';
+
+                        if (imageLink) {
+                            imageLink.href = storyUrl;
+                        }
+
+                        if (image) {
+                            image.src = storyImage;
+                            image.alt = storyTitle;
+                        }
+
+                        if (titleLink) {
+                            titleLink.href = storyUrl;
+                        }
+
+                        if (title) {
+                            title.textContent = storyTitle;
+                        }
+
+                        if (summary) {
+                            summary.textContent = story.summary || '';
+                        }
+
+                        if (category) {
+                            category.textContent = story.category || 'Politics';
+                        }
+
+                        if (date) {
+                            date.textContent = story.date || '';
+                        }
+
+                        if (author) {
+                            author.textContent = story.author || 'Staff Reporter';
+                        }
+                    };
+
+                    const preloadImage = (src) => new Promise((resolve) => {
+                        if (!src) {
+                            resolve();
+                            return;
+                        }
+
+                        const preloaded = new Image();
+                        preloaded.onload = resolve;
+                        preloaded.onerror = resolve;
+                        preloaded.src = src;
+                    });
+
+                    const setStory = (nextIndex) => {
+                        if (
+                            nextIndex < 0
+                            || nextIndex >= heroStories.length
+                            || nextIndex === activeIndex
+                            || isTransitioning
+                        ) {
+                            return;
+                        }
+
+                        const nextStory = heroStories[nextIndex];
+                        isTransitioning = true;
+                        heroSpotlight.classList.add('is-transitioning');
+
+                        if (transitionTimer) {
+                            window.clearTimeout(transitionTimer);
+                        }
+
+                        preloadImage(nextStory.image || '').then(() => {
+                            transitionTimer = window.setTimeout(() => {
+                                activeIndex = nextIndex;
+                                applyStory(nextStory);
+                                window.requestAnimationFrame(() => {
+                                    heroSpotlight.classList.remove('is-transitioning');
+                                    isTransitioning = false;
+                                });
+                            }, 180);
+                        });
+                    };
+
+                    window.setInterval(() => {
+                        setStory((activeIndex + 1) % heroStories.length);
+                    }, interval);
+                }
             })();
         </script>
 

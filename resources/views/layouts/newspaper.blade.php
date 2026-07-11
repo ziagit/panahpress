@@ -596,6 +596,13 @@
             grid-template-columns: minmax(0, 1.45fr) minmax(250px, 0.9fr);
             gap: 16px;
             align-items: start;
+            transition: opacity 0.22s ease, transform 0.22s ease;
+            will-change: opacity;
+        }
+
+        .story-spotlight.is-transitioning {
+            opacity: 0;
+            transform: translateY(4px);
         }
 
         .story-spotlight__image {
@@ -2586,6 +2593,8 @@
 
             .post-title {
                 max-width: 100%;
+                font-size: 1.35rem;
+                line-height: 1.12;
             }
         }
 

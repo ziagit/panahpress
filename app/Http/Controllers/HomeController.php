@@ -42,6 +42,7 @@ class HomeController extends Controller
         $videoStories = $this->buildVideoStories($locale);
 
         $featuredLead = $storyBank->first();
+        $heroStories = $storyBank->take(5)->values();
         $heroRail = $storyBank->slice(1, 4)->values();
         $featuredCards = $storyBank->slice(5, 4)->values();
         $businessLead = $storyBank->slice(9, 1)->first() ?? $storyBank->first();
@@ -87,6 +88,7 @@ class HomeController extends Controller
             'locale',
             'selectedCategory',
             'featuredLead',
+            'heroStories',
             'heroRail',
             'featuredCards',
             'businessLead',

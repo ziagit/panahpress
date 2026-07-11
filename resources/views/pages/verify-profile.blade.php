@@ -173,16 +173,15 @@
 
         .portfolio-meta {
             margin-top: 10px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px 16px;
+            display: grid;
+            gap: 8px;
+            justify-items: center;
             color: rgba(26, 26, 26, 0.68);
             font-size: 0.92rem;
         }
 
         .portfolio-meta span {
-            display: inline-flex;
+            display: flex;
             align-items: center;
             gap: 6px;
         }
@@ -468,16 +467,14 @@
                     </div>
 
                     <div>
-                        <p class="portfolio-kicker">{{ $currentPosition }}</p>
                         <h1 class="portfolio-name">{{ $card->full_name }}</h1>
-                        <p class="portfolio-subtitle">
-                            {{ $location }} · {{ $card->occupation }}
-                        </p>
                         <div class="portfolio-meta">
                             <span><strong>{{ __('messages.card_id') }}:</strong> <span class="verify-ltr">{{ $card->code }}</span></span>
                             @if($birthDate)
                                 <span><strong>{{ __('messages.birth_date') }}:</strong> <span class="verify-ltr">{{ $birthDate }}</span></span>
                             @endif
+                            <span><strong>{{ __('messages.verify_location') }}:</strong> {{ $location }}</span>
+                            <span><strong>{{ __('messages.verify_current_position') }}:</strong> {{ $currentPosition }}</span>
                         </div>
                     </div>
                 </header>
