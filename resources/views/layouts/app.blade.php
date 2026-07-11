@@ -6,23 +6,23 @@
     <title>{{ $title ?? __('messages.site_name') }}</title>
     <style>
         @php
-            $diroozWolVersion = @filemtime(public_path('fonts/dirooz/Without-Latin/Dirooz-WOL.woff2')) ?: time();
+            $iransansRegularPath = public_path('fonts/IRANSans/IRANSans Regular/IRANSans Regular.ttf');
+            $iransansMediumPath = public_path('fonts/IRANSans/IRANSans Medium/IRANSans Medium.ttf');
+            $iransansVersion = @filemtime($iransansRegularPath) ?: time();
+            $iransansRegularUrl = str_replace(' ', '%20', asset('fonts/IRANSans/IRANSans Regular/IRANSans Regular.ttf')).'?v='.$iransansVersion;
+            $iransansMediumUrl = str_replace(' ', '%20', asset('fonts/IRANSans/IRANSans Medium/IRANSans Medium.ttf')).'?v='.$iransansVersion;
         @endphp
         @font-face {
-            font-family: 'Dirooz WOL';
-            src: url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff2') }}?v={{ $diroozWolVersion }}") format('woff2'),
-                 url("/fonts/dirooz/Without-Latin/Dirooz-WOL.woff2?v={{ $diroozWolVersion }}") format('woff2'),
-                 url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff') }}?v={{ $diroozWolVersion }}") format('woff');
+            font-family: 'IRANSans';
+            src: url("{{ $iransansRegularUrl }}") format('truetype');
             font-weight: 400;
             font-style: normal;
             font-display: swap;
         }
 
         @font-face {
-            font-family: 'Dirooz WOL';
-            src: url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff2') }}?v={{ $diroozWolVersion }}") format('woff2'),
-                 url("/fonts/dirooz/Without-Latin/Dirooz-WOL.woff2?v={{ $diroozWolVersion }}") format('woff2'),
-                 url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff') }}?v={{ $diroozWolVersion }}") format('woff');
+            font-family: 'IRANSans';
+            src: url("{{ $iransansMediumUrl }}") format('truetype');
             font-weight: 700;
             font-style: normal;
             font-display: swap;
@@ -38,9 +38,11 @@
             --page-bg: #f8fafc;
             --text: #0f172a;
             --muted: #64748b;
-            --sans-base: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            --sans: var(--sans-base);
-            --sans-fa: 'Dirooz WOL', var(--sans-base);
+            --iransans: 'IRANSans', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --sans-base: var(--iransans);
+            --sans: var(--iransans);
+            --serif-base: var(--iransans);
+            --serif: var(--iransans);
             color: var(--text);
             background: var(--page-bg);
             font-family: var(--sans);
@@ -50,13 +52,11 @@
 
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        html[lang="fa"] { --sans: var(--sans-fa); }
+        html[lang="fa"] :is(h1, h2, h3, h4, h5, h6) {
+            line-height: 1.35 !important;
+        }
         body { margin: 0; min-height: 100vh; background: var(--page-bg); color: var(--text); }
         body { font-family: var(--sans); }
-        html[lang="fa"] body,
-        html[lang="fa"] body * {
-            font-family: 'Dirooz WOL', var(--sans-base) !important;
-        }
         html[dir="rtl"] body { direction: rtl; }
         img { max-width: 100%; display: block; }
         a { color: inherit; text-decoration: none; }
@@ -462,7 +462,7 @@
 
         .hero { display:grid; grid-template-columns: 1.3fr 0.9fr; gap: 1.5rem; margin: 2rem 0 1.8rem; }
         .hero-card { background: #ffffff; border-radius: 0; padding: 1.5rem; box-shadow: none; border: 0; }
-        .hero-card h1 { margin: 0.75rem 0 0.85rem; font-size: clamp(2rem, 2.8vw, 3rem); line-height: 1.05; }
+        .hero-card h1 { margin: 0.75rem 0 0.85rem; font-size: clamp(1.55rem, 2.1vw, 2.1rem); line-height: 1.05; }
         .hero-card p { margin: 0.85rem 0 0; color: #475569; }
         .hero-card .meta { display:flex; flex-wrap:wrap; gap:0.75rem; margin-top:1rem; color:#64748b; font-size:0.95rem; }
         .featured img { border-radius: 0; }
@@ -502,7 +502,7 @@
         }
         .news-featured-content h1 {
             margin:0;
-            font-size: clamp(2.1rem, 3.8vw, 3.75rem);
+            font-size: clamp(1.65rem, 3vw, 2.55rem);
             line-height:1.03;
             letter-spacing:-0.04em;
         }
@@ -535,7 +535,7 @@
         .news-rail-header h3,
         .news-section-header h2 {
             margin:0;
-            font-size:1.15rem;
+            font-size:0.92rem;
             letter-spacing:-0.02em;
         }
         .story-rail {
@@ -615,7 +615,7 @@
         }
         .lead-story-content h3 {
             margin:0;
-            font-size:1.15rem;
+            font-size:0.92rem;
             line-height:1.2;
         }
         .lead-story-content p {
@@ -663,13 +663,13 @@
         }
 
         .section-title { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin: 2rem 0 1rem; }
-        .section-title h2 { margin: 0; font-size: 1.35rem; }
+        .section-title h2 { margin: 0; font-size: 1.05rem; }
         .grid { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:1rem; }
         .related-articles-grid { display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:1rem; }
         .card { background:white; border-radius:0; overflow:hidden; box-shadow:none; border:0; }
         .card-link { display:block; color: inherit; }
         .card .meta { padding: 1rem 1rem 1.2rem; }
-        .card h3 { margin:0 0 0.65rem; font-size:1.05rem; }
+        .card h3 { margin:0 0 0.65rem; font-size:0.88rem; }
         .card p { margin:0 0 0.9rem; color:#475569; font-size:0.95rem; line-height:1.65; }
         .card img { width:100%; height:220px; object-fit:cover; }
 
@@ -685,7 +685,7 @@
             font-size: 0.95rem;
         }
         .footer-grid { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:1.5rem; }
-        .footer-grid h3 { margin:0 0 0.7rem; font-size:1rem; color:#0f172a; }
+        .footer-grid h3 { margin:0 0 0.7rem; font-size:0.84rem; color:#0f172a; }
         .footer-links { display:grid; gap:0.55rem; }
         .footer-links a { color:#334155; }
         .footer-socials { display:flex; flex-wrap:wrap; gap:0.6rem; }
@@ -749,7 +749,7 @@
 
         .auth-visual h1 {
             margin: 1rem 0 0.75rem;
-            font-size: clamp(2rem, 3vw, 3.3rem);
+            font-size: clamp(1.55rem, 2.3vw, 2.2rem);
             line-height: 1.02;
         }
 
@@ -787,7 +787,7 @@
 
         .panel-header h1 {
             margin: 0.5rem 0 0;
-            font-size: clamp(1.8rem, 2.5vw, 2.6rem);
+            font-size: clamp(1.4rem, 2vw, 1.9rem);
         }
 
         .panel-actions {
@@ -902,9 +902,9 @@
             color: #0f172a;
         }
 
-        .post-content h1 { font-size: clamp(2rem, 3vw, 2.8rem); }
-        .post-content h2 { font-size: 1.8rem; }
-        .post-content h3 { font-size: 1.45rem; }
+        .post-content h1 { font-size: clamp(1.55rem, 2.3vw, 2rem); }
+        .post-content h2 { font-size: 1.35rem; }
+        .post-content h3 { font-size: 1.1rem; }
         .post-content p,
         .post-content ul,
         .post-content ol,
@@ -977,7 +977,7 @@
             .card img { height: 180px; }
             .hero { margin-top: 1rem; }
             .auth-card, .auth-visual, .panel-card { padding: 1.25rem; }
-            .news-featured-content h1 { font-size: clamp(1.8rem, 8vw, 2.4rem); }
+            .news-featured-content h1 { font-size: clamp(1.45rem, 6.5vw, 1.9rem); }
             .news-rail img,
             .story-item img {
                 width: 76px;

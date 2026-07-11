@@ -25,7 +25,7 @@
         .verify-result-head h1 {
             margin: 0.3rem 0 0;
             font-family: var(--serif);
-            font-size: clamp(2rem, 4vw, 3.25rem);
+            font-size: clamp(1.55rem, 2.8vw, 2.15rem);
             line-height: 1.04;
             color: #11161c;
         }
@@ -101,7 +101,7 @@
 
         .press-card__title {
             margin-top: 6px;
-            font-size: clamp(3.6rem, 11vw, 6.2rem);
+            font-size: clamp(3.2rem, 9vw, 5.4rem);
             font-weight: 900;
             letter-spacing: 0.08em;
             line-height: 1;
@@ -143,7 +143,7 @@
         }
 
         .press-card__name {
-            font-size: clamp(1.7rem, 3.8vw, 3.05rem);
+            font-size: clamp(1.4rem, 2.8vw, 2.2rem);
             font-weight: 800;
             letter-spacing: 0.06em;
             line-height: 1.1;
@@ -152,7 +152,7 @@
 
         .press-card__occupation {
             margin-top: 8px;
-            font-size: clamp(1rem, 2.3vw, 1.55rem);
+            font-size: clamp(0.85rem, 1.7vw, 1.1rem);
             font-weight: 800;
             line-height: 1.15;
             letter-spacing: 0.08em;
@@ -161,7 +161,7 @@
 
         .press-card__id {
             margin-top: 8px;
-            font-size: clamp(1.6rem, 3.6vw, 2.8rem);
+            font-size: clamp(1.25rem, 2.5vw, 2rem);
             font-weight: 900;
             line-height: 1;
             letter-spacing: 0.12em;
@@ -203,7 +203,7 @@
         .press-card__dates {
             display: grid;
             gap: 8px;
-            font-size: clamp(0.96rem, 1.8vw, 1.2rem);
+            font-size: clamp(0.82rem, 1.4vw, 0.95rem);
             font-weight: 700;
             line-height: 1.4;
         }

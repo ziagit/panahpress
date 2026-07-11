@@ -4,7 +4,7 @@
     <section class="page-shell" style="padding-top: 24px; min-height: 70vh;">
         <div class="page-card" style="display:grid; gap: 22px;">
             <div>
-                <h1 style="margin: 0 0 12px; font-family: var(--serif); font-size: clamp(2rem, 3vw, 3rem); line-height: 1.05; color:#11161c;">{{ __('messages.donate_page_title') }}</h1>
+                <h1 style="margin: 0 0 12px; font-family: var(--serif); font-size: clamp(1.55rem, 2.2vw, 2rem); line-height: 1.05; color:#11161c;">{{ __('messages.donate_page_title') }}</h1>
                 <p style="margin: 0 0 12px; color:#334155; font-size: 1.05rem; line-height: 1.7;">{{ __('messages.donate_page_intro') }}</p>
                 <p style="margin: 0; color:#475569; font-size: 1rem; line-height: 1.8;">{{ __('messages.donate_page_body') }}</p>
             </div>

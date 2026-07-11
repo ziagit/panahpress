@@ -114,7 +114,7 @@
 
         .portfolio-name {
             margin: 0;
-            font-size: clamp(2.15rem, 4.8vw, 3.35rem);
+            font-size: clamp(1.7rem, 3.4vw, 2.25rem);
             line-height: 1;
             letter-spacing: -0.04em;
             font-weight: 700;

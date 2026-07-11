@@ -5,7 +5,7 @@
         <div style="max-width: 760px; margin: 0 auto; display:grid; gap: 18px;">
             <div style="display:grid; gap: 10px; text-align:center;">
                 <span class="kicker">{{ __('messages.footer_verify') }}</span>
-                <h1 style="margin: 0; font-family: var(--serif); font-size: clamp(2.1rem, 3vw, 3.2rem); line-height: 1.02; color:#11161c;">
+                <h1 style="margin: 0; font-family: var(--serif); font-size: clamp(1.65rem, 2.3vw, 2.2rem); line-height: 1.02; color:#11161c;">
                     {{ __('messages.verify_page_title') }}
                 </h1>
                 <p style="margin: 0 auto; max-width: 620px; color:#334155; font-size: 1.05rem; line-height: 1.8;">

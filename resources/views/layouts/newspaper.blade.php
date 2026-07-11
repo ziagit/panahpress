@@ -11,23 +11,23 @@
     @stack('head')
     <style>
         @php
-            $diroozWolVersion = @filemtime(public_path('fonts/dirooz/Without-Latin/Dirooz-WOL.woff2')) ?: time();
+            $iransansRegularPath = public_path('fonts/IRANSans/IRANSans Regular/IRANSans Regular.ttf');
+            $iransansMediumPath = public_path('fonts/IRANSans/IRANSans Medium/IRANSans Medium.ttf');
+            $iransansVersion = @filemtime($iransansRegularPath) ?: time();
+            $iransansRegularUrl = str_replace(' ', '%20', asset('fonts/IRANSans/IRANSans Regular/IRANSans Regular.ttf')).'?v='.$iransansVersion;
+            $iransansMediumUrl = str_replace(' ', '%20', asset('fonts/IRANSans/IRANSans Medium/IRANSans Medium.ttf')).'?v='.$iransansVersion;
         @endphp
         @font-face {
-            font-family: 'Dirooz WOL';
-            src: url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff2') }}?v={{ $diroozWolVersion }}") format('woff2'),
-                 url("/fonts/dirooz/Without-Latin/Dirooz-WOL.woff2?v={{ $diroozWolVersion }}") format('woff2'),
-                 url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff') }}?v={{ $diroozWolVersion }}") format('woff');
+            font-family: 'IRANSans';
+            src: url("{{ $iransansRegularUrl }}") format('truetype');
             font-weight: 400;
             font-style: normal;
             font-display: swap;
         }
 
         @font-face {
-            font-family: 'Dirooz WOL';
-            src: url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff2') }}?v={{ $diroozWolVersion }}") format('woff2'),
-                 url("/fonts/dirooz/Without-Latin/Dirooz-WOL.woff2?v={{ $diroozWolVersion }}") format('woff2'),
-                 url("{{ asset('fonts/dirooz/Without-Latin/Dirooz-WOL.woff') }}?v={{ $diroozWolVersion }}") format('woff');
+            font-family: 'IRANSans';
+            src: url("{{ $iransansMediumUrl }}") format('truetype');
             font-weight: 700;
             font-style: normal;
             font-display: swap;
@@ -46,22 +46,11 @@
             --blue-section: #0b8cbf;
             --blue-section-dark: #096f99;
             --footer: #13233a;
-            --serif-base: Georgia, "Times New Roman", Times, serif;
-            --sans-base: Arial, Helvetica, sans-serif;
-            --serif: var(--serif-base);
-            --sans: var(--sans-base);
-            --serif-fa: 'Dirooz WOL', var(--serif-base);
-            --sans-fa: 'Dirooz WOL', var(--sans-base);
-        }
-
-        html[lang="fa"] {
-            --serif: var(--serif-fa);
-            --sans: var(--sans-fa);
-        }
-
-        html[lang="fa"] body,
-        html[lang="fa"] body * {
-            font-family: 'Dirooz WOL', var(--sans-base) !important;
+            --iransans: 'IRANSans', Arial, Helvetica, sans-serif;
+            --serif-base: var(--iransans);
+            --sans-base: var(--iransans);
+            --serif: var(--iransans);
+            --sans: var(--iransans);
         }
 
         * { box-sizing: border-box; }
@@ -74,6 +63,9 @@
             color: var(--ink);
             font-family: var(--sans);
             overflow-x: clip;
+        }
+        html[lang="fa"] :is(h1, h2, h3, h4, h5, h6) {
+            line-height: 1.35 !important;
         }
         img { display: block; max-width: 100%; }
         a { color: inherit; text-decoration: none; }
@@ -658,7 +650,7 @@
         }
 
         .story-spotlight__content .story-title {
-            font-size: clamp(1rem, 1.75vw, 1.7rem);
+            font-size: clamp(0.88rem, 1.45vw, 1.25rem);
             line-height: 1.02;
             margin: 6px 0 10px;
             display: -webkit-box;
@@ -761,7 +753,7 @@
         .home-rail-story__title {
             margin: 0;
             font-family: var(--serif);
-            font-size: 17px;
+            font-size: 14px;
             line-height: 1.06;
             font-weight: 700;
             color: #11161c;
@@ -822,13 +814,13 @@
 
         .home-story-card__title {
             margin: 0;
-            font-size: 18px;
+            font-size: 14px;
             line-height: 1.08;
         }
 
         .home-story-card--card .home-story-card__title,
         .home-story-card--business-card .home-story-card__title {
-            font-size: 16px;
+            font-size: 13px;
             line-height: 1.1;
         }
 
@@ -857,7 +849,7 @@
         .section-heading h2 {
             margin: 0;
             font-family: var(--serif);
-            font-size: 28px;
+            font-size: 21px;
             line-height: 1.05;
             color: #11161c;
             position: relative;
@@ -899,7 +891,7 @@
 
         .hero-card h1 {
             margin: 0.75rem 0 0.85rem;
-            font-size: clamp(2rem, 2.8vw, 3rem);
+            font-size: clamp(1.55rem, 2.1vw, 2.1rem);
             line-height: 1.05;
         }
 
@@ -954,7 +946,7 @@
         .business-lead__title {
             margin: 6px 0 10px;
             font-family: var(--serif);
-            font-size: clamp(1.1rem, 2vw, 1.7rem);
+            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
             line-height: 1.02;
             display: -webkit-box;
             -webkit-box-orient: vertical;
@@ -1079,7 +1071,7 @@
         .compact-link__title {
             margin: 0;
             font-family: var(--serif);
-            font-size: 16px;
+            font-size: 13px;
             line-height: 1.18;
             font-weight: 400;
             color: #11161c;
@@ -1217,7 +1209,7 @@
 
         .home-video-card__title {
             margin: 0;
-            font-size: 16px;
+            font-size: 13px;
             line-height: 1.08;
             color: #fff;
         }
@@ -1358,7 +1350,7 @@
         .post-title {
             margin: 0;
             font-family: var(--serif);
-            font-size: clamp(1.75rem, 2.4vw, 2.1rem);
+            font-size: clamp(1.4rem, 1.9vw, 1.7rem);
             line-height: 1.06;
             font-weight: 700;
             color: #11161c;
@@ -2045,7 +2037,7 @@
         .opinion-lead__title {
             margin: 0;
             font-family: var(--serif);
-            font-size: clamp(1.1rem, 2vw, 1.7rem);
+            font-size: clamp(0.9rem, 1.5vw, 1.25rem);
             line-height: 1.05;
             font-weight: 700;
             letter-spacing: -0.02em;
@@ -2593,7 +2585,7 @@
 
             .post-title {
                 max-width: 100%;
-                font-size: 1.35rem;
+                font-size: 1.2rem;
                 line-height: 1.12;
             }
         }

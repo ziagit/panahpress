@@ -9,14 +9,19 @@
             color-scheme: light;
             color: #0f172a;
             background: #f1f5f9;
-            font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --iransans: 'IRANSans', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: var(--iransans);
             font-size: 16px;
             line-height: 1.6;
         }
 
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
+        html[lang="fa"] :is(h1, h2, h3, h4, h5, h6) {
+            line-height: 1.35 !important;
+        }
         body { margin: 0; min-height: 100vh; background: #f1f5f9; color: #0f172a; }
+        body { font-family: var(--iransans); }
         body[dir="rtl"] { direction: rtl; }
         img { max-width: 100%; display: block; }
         a { color: inherit; text-decoration: none; }
@@ -134,7 +139,7 @@
 
         .admin-topbar .title {
             margin: 0.2rem 0 0;
-            font-size: clamp(1.6rem, 2.4vw, 2.5rem);
+            font-size: clamp(1.25rem, 1.8vw, 1.8rem);
             letter-spacing: -0.03em;
         }
 
@@ -179,7 +184,7 @@
 
         .panel-header h1 {
             margin: 0.45rem 0 0;
-            font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+            font-size: clamp(1.4rem, 2vw, 1.8rem);
             letter-spacing: -0.03em;
         }
 
@@ -216,7 +221,7 @@
 
         .auth-visual h1 {
             margin: 0.7rem 0 0.5rem;
-            font-size: clamp(1.8rem, 2.4vw, 2.6rem);
+            font-size: clamp(1.4rem, 1.9vw, 1.9rem);
         }
 
         .auth-badges {

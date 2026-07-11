@@ -70,7 +70,7 @@
 
         .gallery-title {
             margin: 0;
-            font-size: clamp(2rem, 4vw, 3rem);
+            font-size: clamp(1.55rem, 2.9vw, 2rem);
             line-height: 1;
             letter-spacing: -0.04em;
             font-weight: 700;
