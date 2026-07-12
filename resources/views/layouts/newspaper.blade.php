@@ -94,8 +94,7 @@
             overflow-x: clip;
         }
         html[lang="fa"] body p {
-            font-size: 1.04rem;
-            line-height: 1.88;
+            line-height: 1.65 !important;
         }
         html[lang="fa"] h1,
         html[lang="fa"] h2,
@@ -103,7 +102,7 @@
         html[lang="fa"] h4,
         html[lang="fa"] h5,
         html[lang="fa"] h6 {
-            line-height: 1.35 !important;
+            line-height: 1.25 !important;
         }
         html:not([lang="fa"]) :is(h1, h2, h3, h4, h5, h6) {
             line-height: 1.25 !important;
@@ -1766,8 +1765,7 @@
             margin: 0;
         }
         html[lang="fa"] .post-content p {
-            font-size: 1.04rem;
-            line-height: 1.88;
+            line-height: 1.65 !important;
         }
 
         .post-content figure {

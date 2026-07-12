@@ -82,7 +82,7 @@
             font-size: 18px;
         }
         html[lang="fa"] :is(h1, h2, h3, h4, h5, h6) {
-            line-height: 1.35 !important;
+            line-height: 1.25 !important;
         }
         html:not([lang="fa"]) :is(h1, h2, h3, h4, h5, h6) {
             line-height: 1.25 !important;
@@ -94,8 +94,7 @@
             line-height: 1.8;
         }
         html[lang="fa"] body p {
-            font-size: 1.06rem;
-            line-height: 1.9;
+            line-height: 1.65 !important;
         }
         html[dir="rtl"] body { direction: rtl; }
         img { max-width: 100%; display: block; }

@@ -74,7 +74,7 @@
             font-size: 18px;
         }
         html[lang="fa"] :is(h1, h2, h3, h4, h5, h6) {
-            line-height: 1.35 !important;
+            line-height: 1.25 !important;
         }
         html:not([lang="fa"]) :is(h1, h2, h3, h4, h5, h6) {
             line-height: 1.25 !important;
@@ -82,8 +82,7 @@
         body { margin: 0; min-height: 100vh; background: #f1f5f9; color: #0f172a; }
         body { font-family: var(--sans); }
         html[lang="fa"] body p {
-            font-size: 1.06rem;
-            line-height: 1.9;
+            line-height: 1.65 !important;
         }
         body[dir="rtl"] { direction: rtl; }
         img { max-width: 100%; display: block; }

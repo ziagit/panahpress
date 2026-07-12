@@ -40,6 +40,22 @@
             .post-page {
                 margin-bottom: 3rem;
             }
+            @media (max-width: 767px) {
+                html:not([lang="fa"]) .post-byline {
+                    font-size: 0.68rem !important;
+                    gap: 0.4rem !important;
+                }
+
+                html:not([lang="fa"]) .post-byline img {
+                    width: 28px !important;
+                    height: 28px !important;
+                }
+
+                html:not([lang="fa"]) .post-byline > div {
+                    font-size: 0.62rem !important;
+                    line-height: 1.1 !important;
+                }
+            }
         </style>
     @endpush
 
