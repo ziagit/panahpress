@@ -13,10 +13,31 @@
         @php
             $xbNiloofarRegularPath = public_path('fonts/xb-niloofar/XB Niloofar Regular_23326.ttf');
             $xbNiloofarBoldPath = public_path('fonts/xb-niloofar/XB Niloofar Bold_23327.ttf');
+            $merriweatherRegularPath = public_path('fonts/Merriweather/Merriweather-VariableFont_opsz,wdth,wght.ttf');
+            $merriweatherItalicPath = public_path('fonts/Merriweather/Merriweather-Italic-VariableFont_opsz,wdth,wght.ttf');
             $xbNiloofarVersion = @filemtime($xbNiloofarRegularPath) ?: time();
+            $merriweatherVersion = @filemtime($merriweatherRegularPath) ?: time();
             $xbNiloofarRegularUrl = str_replace(' ', '%20', asset('fonts/xb-niloofar/XB Niloofar Regular_23326.ttf')).'?v='.$xbNiloofarVersion;
             $xbNiloofarBoldUrl = str_replace(' ', '%20', asset('fonts/xb-niloofar/XB Niloofar Bold_23327.ttf')).'?v='.$xbNiloofarVersion;
+            $merriweatherRegularUrl = str_replace(' ', '%20', asset('fonts/Merriweather/Merriweather-VariableFont_opsz,wdth,wght.ttf')).'?v='.$merriweatherVersion;
+            $merriweatherItalicUrl = str_replace(' ', '%20', asset('fonts/Merriweather/Merriweather-Italic-VariableFont_opsz,wdth,wght.ttf')).'?v='.$merriweatherVersion;
         @endphp
+        @font-face {
+            font-family: 'Merriweather';
+            src: url("{{ $merriweatherRegularUrl }}") format('truetype');
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Merriweather';
+            src: url("{{ $merriweatherItalicUrl }}") format('truetype');
+            font-weight: 100 900;
+            font-style: italic;
+            font-display: swap;
+        }
+
         @font-face {
             font-family: 'XB Niloofar';
             src: url("{{ $xbNiloofarRegularUrl }}") format('truetype');
@@ -46,16 +67,21 @@
             --blue-section: #0b8cbf;
             --blue-section-dark: #096f99;
             --footer: #13233a;
-            --iransans: 'XB Niloofar', Arial, Helvetica, sans-serif;
-            --serif-base: var(--iransans);
-            --sans-base: var(--iransans);
-            --serif: var(--iransans);
-            --sans: var(--iransans);
+            --font-latin: 'Merriweather', 'XB Niloofar', Georgia, 'Times New Roman', serif;
+            --font-persian: 'XB Niloofar', 'Merriweather', Arial, Helvetica, sans-serif;
+            --serif-base: var(--font-latin);
+            --sans-base: var(--font-latin);
+            --serif: var(--serif-base);
+            --sans: var(--sans-base);
         }
 
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         html { overflow-x: clip; }
+        html[lang="fa"] {
+            --serif-base: var(--font-persian);
+            --sans-base: var(--font-persian);
+        }
         html[lang="fa"] {
             font-size: 18px;
         }
@@ -66,6 +92,10 @@
             color: var(--ink);
             font-family: var(--sans);
             overflow-x: clip;
+        }
+        html[lang="fa"] body p {
+            font-size: 1.04rem;
+            line-height: 1.88;
         }
         html[lang="fa"] h1,
         html[lang="fa"] h2,
@@ -1731,6 +1761,10 @@
 
         .post-content p {
             margin: 0;
+        }
+        html[lang="fa"] .post-content p {
+            font-size: 1.04rem;
+            line-height: 1.88;
         }
 
         .post-content figure {

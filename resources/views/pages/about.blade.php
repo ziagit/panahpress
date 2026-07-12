@@ -1,10 +1,50 @@
 @extends('layouts.newspaper')
 
 @section('content')
-    <section class="page-shell" style="padding-top: 24px; padding-bottom: 48px; min-height: 70vh;">
-        <div class="page-card" style="display:grid; grid-template-columns: 320px minmax(0, 1fr); gap: 34px; align-items:start;">
-            <div style="display:flex; align-items:center; justify-content:center;">
-                <img src="{{ asset('images/logo.png') }}" alt="{{ __('messages.site_name') }}" style="width: 260px; height: 260px; object-fit: contain;">
+    <style>
+        .about-page__grid {
+            display: grid;
+            grid-template-columns: 320px minmax(0, 1fr);
+            gap: 34px;
+            align-items: start;
+        }
+
+        .about-page__logo-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .about-page__logo {
+            width: 260px;
+            height: 260px;
+            object-fit: contain;
+        }
+
+        .about-page-shell {
+            padding-inline: 12px;
+        }
+
+        @media (max-width: 767px) {
+            .about-page__grid {
+                grid-template-columns: 1fr;
+                gap: 22px;
+            }
+
+            .about-page__logo {
+                width: min(180px, 100%);
+                height: auto;
+            }
+
+            .about-page__logo-wrap {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+    <section class="page-shell about-page-shell" style="padding-top: 24px; padding-bottom: 48px; min-height: 70vh;">
+        <div class="page-card about-page__grid">
+            <div class="about-page__logo-wrap">
+                <img class="about-page__logo" src="{{ asset('images/logo.png') }}" alt="{{ __('messages.site_name') }}">
             </div>
             <div style="padding-top: 2px;">
                 <h1 style="margin: 0 0 12px; font-family: var(--serif); font-size: clamp(1.55rem, 2.2vw, 2rem); line-height: 1.05; color:#11161c;">{{ __('messages.about_page_title') }}</h1>

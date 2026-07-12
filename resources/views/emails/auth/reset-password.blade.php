@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $appName }}</title>
 </head>
-<body style="margin:0;padding:0;background:#f6f9fc;font-family:'XB Niloofar',sans-serif;color:#0f172a;">
+<body style="margin:0;padding:0;background:#f6f9fc;font-family:{{ app()->getLocale() === 'fa' ? '"XB Niloofar", "Merriweather", sans-serif' : '"Merriweather", "XB Niloofar", Georgia, serif' }};color:#0f172a;">
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f6f9fc;padding:32px 16px;">
         <tr>
             <td align="center">

@@ -5,12 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title ?? __('messages.admin_panel') }} | {{ __('messages.site_name') }}</title>
     <style>
+        @php
+            $xbNiloofarRegularPath = public_path('fonts/xb-niloofar/XB Niloofar Regular_23326.ttf');
+            $xbNiloofarBoldPath = public_path('fonts/xb-niloofar/XB Niloofar Bold_23327.ttf');
+            $merriweatherRegularPath = public_path('fonts/Merriweather/Merriweather-VariableFont_opsz,wdth,wght.ttf');
+            $merriweatherItalicPath = public_path('fonts/Merriweather/Merriweather-Italic-VariableFont_opsz,wdth,wght.ttf');
+            $xbNiloofarVersion = @filemtime($xbNiloofarRegularPath) ?: time();
+            $merriweatherVersion = @filemtime($merriweatherRegularPath) ?: time();
+            $xbNiloofarRegularUrl = str_replace(' ', '%20', asset('fonts/xb-niloofar/XB Niloofar Regular_23326.ttf')).'?v='.$xbNiloofarVersion;
+            $xbNiloofarBoldUrl = str_replace(' ', '%20', asset('fonts/xb-niloofar/XB Niloofar Bold_23327.ttf')).'?v='.$xbNiloofarVersion;
+            $merriweatherRegularUrl = str_replace(' ', '%20', asset('fonts/Merriweather/Merriweather-VariableFont_opsz,wdth,wght.ttf')).'?v='.$merriweatherVersion;
+            $merriweatherItalicUrl = str_replace(' ', '%20', asset('fonts/Merriweather/Merriweather-Italic-VariableFont_opsz,wdth,wght.ttf')).'?v='.$merriweatherVersion;
+        @endphp
+        @font-face {
+            font-family: 'Merriweather';
+            src: url("{{ $merriweatherRegularUrl }}") format('truetype');
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Merriweather';
+            src: url("{{ $merriweatherItalicUrl }}") format('truetype');
+            font-weight: 100 900;
+            font-style: italic;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'XB Niloofar';
+            src: url("{{ $xbNiloofarRegularUrl }}") format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'XB Niloofar';
+            src: url("{{ $xbNiloofarBoldUrl }}") format('truetype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
         :root {
             color-scheme: light;
             color: #0f172a;
             background: #f1f5f9;
-            --iransans: 'XB Niloofar', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            font-family: var(--iransans);
+            --font-latin: 'Merriweather', 'XB Niloofar', Georgia, 'Times New Roman', serif;
+            --font-persian: 'XB Niloofar', 'Merriweather', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --sans-base: var(--font-latin);
+            --sans: var(--sans-base);
+            --serif-base: var(--font-latin);
+            --serif: var(--serif-base);
+            font-family: var(--sans);
             font-size: 17px;
             line-height: 1.6;
         }
@@ -18,13 +67,21 @@
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         html[lang="fa"] {
+            --sans-base: var(--font-persian);
+            --serif-base: var(--font-persian);
+        }
+        html[lang="fa"] {
             font-size: 18px;
         }
         html[lang="fa"] :is(h1, h2, h3, h4, h5, h6) {
             line-height: 1.35 !important;
         }
         body { margin: 0; min-height: 100vh; background: #f1f5f9; color: #0f172a; }
-        body { font-family: var(--iransans); }
+        body { font-family: var(--sans); }
+        html[lang="fa"] body p {
+            font-size: 1.06rem;
+            line-height: 1.9;
+        }
         body[dir="rtl"] { direction: rtl; }
         img { max-width: 100%; display: block; }
         a { color: inherit; text-decoration: none; }
