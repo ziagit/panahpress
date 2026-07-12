@@ -2606,7 +2606,9 @@
             }
 
             .home-ad-banner__image {
-                aspect-ratio: 16 / 9;
+                aspect-ratio: auto;
+                height: auto;
+                object-fit: contain;
             }
 
             .post-video {
