@@ -76,6 +76,9 @@
         html[lang="fa"] :is(h1, h2, h3, h4, h5, h6) {
             line-height: 1.35 !important;
         }
+        html:not([lang="fa"]) :is(h1, h2, h3, h4, h5, h6) {
+            line-height: 1.25 !important;
+        }
         body { margin: 0; min-height: 100vh; background: #f1f5f9; color: #0f172a; }
         body { font-family: var(--sans); }
         html[lang="fa"] body p {

@@ -105,6 +105,9 @@
         html[lang="fa"] h6 {
             line-height: 1.35 !important;
         }
+        html:not([lang="fa"]) :is(h1, h2, h3, h4, h5, h6) {
+            line-height: 1.25 !important;
+        }
         img { display: block; max-width: 100%; }
         a { color: inherit; text-decoration: none; }
         button, input, select { font: inherit; }
