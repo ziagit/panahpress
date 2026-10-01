@@ -121,4 +121,17 @@ class AuthorController extends Controller
         return Redirect::route('admin.authors.index', ['locale' => $locale])
             ->with('success', __('messages.author_saved'));
     }
+
+    public function toggleApproval(Request $request, $locale, User $author)
+    {
+        $locale = $this->setLocale($request);
+
+        abort_unless($author->role === 'author', 404);
+
+        $author->auto_approve_posts = ! $author->auto_approve_posts;
+        $author->save();
+
+        return Redirect::back()
+            ->with('success', __($author->auto_approve_posts ? 'messages.author_approval_enabled' : 'messages.author_approval_disabled', ['name' => $author->name]));
+    }
 }

@@ -70,7 +70,7 @@
         </div>
     @else
         <div class="form-field">
-            <p class="editor-help">{{ __('messages.post_pending_review_notice') }}</p>
+            <p class="editor-help">{{ auth()->user()?->canPublishWithoutApproval() ? __('messages.post_auto_approved_notice') : __('messages.post_pending_review_notice') }}</p>
         </div>
     @endif
 

@@ -272,6 +272,9 @@ Route::group([
         Route::put('/admin/authors/{author}', [AdminAuthorController::class, 'update'])
             ->name('admin.authors.update');
 
+        Route::patch('/admin/authors/{author}/approval', [AdminAuthorController::class, 'toggleApproval'])
+            ->name('admin.authors.approval');
+
         /*
         |--------------------------------------------------------------------------
         | VERIFICATION CARDS

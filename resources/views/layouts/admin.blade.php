@@ -495,6 +495,13 @@
             .panel-actions .button { width: 100%; }
             .post-sidebar .sidebar-panel { padding: 1rem; }
         }
+        .approval-switch { display:inline-flex; align-items:center; gap:0.55rem; background:none; border:none; padding:0; cursor:pointer; font:inherit; color:#64748b; font-weight:600; }
+        .approval-switch-track { position:relative; width:2.5rem; height:1.4rem; border-radius:999px; background:#cbd5e1; transition:background 0.2s; flex-shrink:0; }
+        .approval-switch-thumb { position:absolute; top:0.2rem; inset-inline-start:0.2rem; width:1rem; height:1rem; border-radius:50%; background:#fff; box-shadow:0 1px 2px rgba(15,23,42,0.25); transition:inset-inline-start 0.2s; }
+        .approval-switch.is-on { color:#16a34a; }
+        .approval-switch.is-on .approval-switch-track { background:#16a34a; }
+        .approval-switch.is-on .approval-switch-thumb { inset-inline-start:1.3rem; }
+        .approval-switch:focus-visible .approval-switch-track { outline:2px solid #2563eb; outline-offset:2px; }
     </style>
 </head>
 <body>

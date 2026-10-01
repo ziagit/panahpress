@@ -28,6 +28,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'auto_approve_posts' => 'boolean',
         ];
     }
 
@@ -39,6 +40,11 @@ class User extends Authenticatable
     public function isAuthor(): bool
     {
         return $this->role === 'author';
+    }
+
+    public function canPublishWithoutApproval(): bool
+    {
+        return $this->isAdmin() || ($this->isAuthor() && $this->auto_approve_posts);
     }
 
     public function posts(): HasMany

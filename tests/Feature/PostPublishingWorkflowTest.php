@@ -132,4 +132,59 @@ class PostPublishingWorkflowTest extends TestCase
             ->delete(route('admin.posts.destroy', ['locale' => 'en', 'post' => $post]))
             ->assertForbidden();
     }
+
+    public function test_author_with_auto_approval_publishes_immediately(): void
+    {
+        $author = User::factory()->create([
+            'role' => 'author',
+            'auto_approve_posts' => true,
+        ]);
+
+        $this->actingAs($author)
+            ->post(route('admin.posts.store', ['locale' => 'en']), [
+                'title_en' => 'Trusted story',
+                'title_fa' => 'داستان مورد اعتماد',
+                'content_en' => 'English content',
+                'content_fa' => 'محتوای فارسی',
+            ])
+            ->assertRedirect();
+
+        $post = Post::query()->firstOrFail();
+
+        $this->assertNotNull($post->published_at);
+
+        $this->get(route('posts.show', ['locale' => 'en', 'post' => $post->slug]))
+            ->assertOk();
+    }
+
+    public function test_admin_can_toggle_author_approval(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $author = User::factory()->create(['role' => 'author']);
+
+        $this->assertFalse($author->auto_approve_posts);
+
+        $this->actingAs($admin)
+            ->patch(route('admin.authors.approval', ['locale' => 'en', 'author' => $author]))
+            ->assertRedirect();
+
+        $this->assertTrue($author->refresh()->auto_approve_posts);
+
+        $this->actingAs($admin)
+            ->patch(route('admin.authors.approval', ['locale' => 'en', 'author' => $author]))
+            ->assertRedirect();
+
+        $this->assertFalse($author->refresh()->auto_approve_posts);
+    }
+
+    public function test_author_cannot_toggle_approval(): void
+    {
+        $author = User::factory()->create(['role' => 'author']);
+
+        $this->actingAs($author)
+            ->patch(route('admin.authors.approval', ['locale' => 'en', 'author' => $author]))
+            ->assertForbidden();
+
+        $this->assertFalse($author->refresh()->auto_approve_posts);
+    }
 }

@@ -62,6 +62,10 @@ class PostController extends Controller
             return $attributes['published_at'] ?: now();
         }
 
+        if (! $post && $user?->canPublishWithoutApproval()) {
+            return now();
+        }
+
         return $post?->published_at;
     }
 

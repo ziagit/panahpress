@@ -259,4 +259,11 @@ return [
     'rtl_notice' => 'This website supports both English and Persian with RTL layout.',
     'copyright' => '© :year Panahpress. All rights reserved.',
     'inactive' => 'Inactive',
+    'approval' => 'Approval',
+    'approval_on' => 'Auto',
+    'approval_off' => 'Manual',
+    'approval_help' => 'When on, this author\'s new posts are published without admin approval.',
+    'author_approval_enabled' => ':name\'s new posts will now be published automatically.',
+    'author_approval_disabled' => ':name\'s new posts will now need admin approval.',
+    'post_auto_approved_notice' => 'Your post will be published as soon as you save it.',
 ];

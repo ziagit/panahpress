@@ -42,6 +42,7 @@
                         <th>{{ __('messages.email') }}</th>
                         <th>{{ __('messages.role') }}</th>
                         <th>{{ __('messages.posts') }}</th>
+                        <th>{{ __('messages.approval') }}</th>
                         <th>{{ __('messages.actions') }}</th>
                     </tr>
                 </thead>
@@ -53,12 +54,22 @@
                             <td>{{ __('messages.author') }}</td>
                             <td>{{ $author->posts_count }}</td>
                             <td>
+                                <form action="{{ route('admin.authors.approval', ['locale' => $locale, 'author' => $author]) }}" method="POST" style="margin:0;">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="approval-switch {{ $author->auto_approve_posts ? 'is-on' : '' }}" role="switch" aria-checked="{{ $author->auto_approve_posts ? 'true' : 'false' }}" title="{{ __('messages.approval_help') }}">
+                                        <span class="approval-switch-track"><span class="approval-switch-thumb"></span></span>
+                                        <span>{{ $author->auto_approve_posts ? __('messages.approval_on') : __('messages.approval_off') }}</span>
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
                                 <a href="{{ route('admin.authors.edit', ['locale' => $locale, 'author' => $author]) }}">{{ __('messages.edit') }}</a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" style="text-align:center; padding:1.5rem; color:#64748b;">{{ __('messages.no_authors') }}</td>
+                            <td colspan="6" style="text-align:center; padding:1.5rem; color:#64748b;">{{ __('messages.no_authors') }}</td>
                         </tr>
                     @endforelse
                 </tbody>
