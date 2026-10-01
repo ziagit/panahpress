@@ -266,4 +266,8 @@ return [
     'author_approval_enabled' => ':name\'s new posts will now be published automatically.',
     'author_approval_disabled' => ':name\'s new posts will now need admin approval.',
     'post_auto_approved_notice' => 'Your post will be published as soon as you save it.',
+    'verify_gallery_open_photo' => 'Open photo :number',
+    'close' => 'Close',
+    'previous' => 'Previous',
+    'next' => 'Next',
 ];

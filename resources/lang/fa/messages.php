@@ -266,4 +266,8 @@ return [
     'author_approval_enabled' => 'پست‌های جدید :name از این پس به‌صورت خودکار منتشر می‌شوند.',
     'author_approval_disabled' => 'پست‌های جدید :name از این پس به تأیید مدیر نیاز دارند.',
     'post_auto_approved_notice' => 'پست شما بلافاصله پس از ذخیره منتشر می‌شود.',
+    'verify_gallery_open_photo' => 'باز کردن عکس :number',
+    'close' => 'بستن',
+    'previous' => 'قبلی',
+    'next' => 'بعدی',
 ];
