@@ -136,17 +136,13 @@
         </section>
 
         <section class="home-ad-banner" aria-label="Advertisement">
-            <img
-                src="{{ route('ads.banner.2nd-anniversary') }}"
-                alt="2nd Anniversary advertisement"
-                class="home-ad-banner__image"
-                loading="lazy"
-            >
+            <x-banner placement="home" />
         </section>
 
         <section class="business-section" id="business">
             <x-home.section-title :title="__('messages.business')" />
             <div class="business-layout">
+                @if($businessLead)
                 <article class="business-lead__card">
                     <a href="{{ data_get($businessLead, 'url', '#') }}" class="business-lead__media">
                         <img src="{{ data_get($businessLead, 'image', '') }}" alt="{{ data_get($businessLead, 'title', '') }}">
@@ -163,6 +159,7 @@
                     </div>
                 </article>
 
+                @endif
                 <aside
                     class="business-weather"
                     id="weather-widget"
@@ -256,6 +253,7 @@
         </div>
     </div>
 
+    @if($opinionLead)
     <section class="opinion-section" id="opinions">
         <div class="opinion-layout">
             <div class="opinion-main">
@@ -320,6 +318,7 @@
             </aside>
         </div>
 </section>
+    @endif
 
     @push('scripts')
         <script>

@@ -33,6 +33,14 @@ php artisan serve
 # open http://127.0.0.1:8000/en or /fa
 ```
 
+Local tests:
+
+```bash
+./scripts/test-local
+```
+
+The runner uses PHP's installed SQLite driver, or the local extensions in `storage/app/private/php-extensions/` when system SQLite support is unavailable. Those local binaries are ignored by Git. Tests use a separate in-memory SQLite database.
+
 Admin account (seeded):
 
 - email: admin@panahpress.com

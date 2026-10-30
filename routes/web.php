@@ -27,7 +27,12 @@ Route::get('/', function () {
     return redirect('/en');
 });
 
-Route::get('/banner/2nd-anniversary', function () {
+Route::get('/banner/image/{banner}', function (\App\Models\Banner $banner) {
+    abort_unless(\Illuminate\Support\Facades\Storage::disk('public')->exists($banner->image_path), 404);
+    return response()->file(\Illuminate\Support\Facades\Storage::disk('public')->path($banner->image_path));
+})->name('banners.image');
+
+Route::get('/banner/2nd-anniversary' , function () {
     $path = storage_path('app/public/ads/2nd-anniversary.jpeg');
 
     abort_unless(file_exists($path), 404);
@@ -107,6 +112,10 @@ Route::group([
 
     Route::post('/contact', [ContactController::class, 'store'])
         ->name('contact.send');
+
+    Route::get('/verify/certificates', [\App\Http\Controllers\CertificateVerificationController::class, 'index'])->middleware('throttle:30,1')->name('certificates.verify');
+    Route::get('/verify/certificates/{token}', [\App\Http\Controllers\CertificateVerificationController::class, 'show'])->where('token', '[A-Za-z0-9]{48}')->name('certificates.show');
+    Route::get('/verify/certificates/{token}/image', [\App\Http\Controllers\CertificateVerificationController::class, 'image'])->where('token', '[A-Za-z0-9]{48}')->name('certificates.image');
 
     Route::get('/verify', [VerificationController::class, 'index'])
         ->name('verify');
@@ -230,6 +239,9 @@ Route::group([
     });
 
     Route::middleware(['auth', 'role:admin'])->group(function () {
+        Route::get('/admin/banners', [\App\Http\Controllers\Admin\BannerController::class, 'index'])->name('admin.banners.index');
+        Route::put('/admin/banners/{placement}', [\App\Http\Controllers\Admin\BannerController::class, 'update'])->name('admin.banners.update');
+
         /*
         |--------------------------------------------------------------------------
         | CATEGORIES WRITE ACCESS
@@ -280,6 +292,10 @@ Route::group([
         | VERIFICATION CARDS
         |--------------------------------------------------------------------------
         */
+
+        Route::get('/admin/certificates/{certificate}/qr', [\App\Http\Controllers\Admin\CertificateController::class, 'qr'])->name('admin.certificates.qr');
+        Route::resource('admin/certificates', \App\Http\Controllers\Admin\CertificateController::class)
+            ->only(['index', 'create', 'store', 'edit', 'update'])->names('admin.certificates');
 
         Route::get('/admin/verifications', [AdminVerificationCardController::class, 'index'])
             ->name('admin.verifications.index');

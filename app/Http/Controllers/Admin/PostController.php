@@ -59,7 +59,7 @@ class PostController extends Controller
         $user = $request->user();
 
         if ($user?->isAdmin()) {
-            return $attributes['published_at'] ?: now();
+            return ($attributes['published_at'] ?? null) ?: now();
         }
 
         if (! $post && $user?->canPublishWithoutApproval()) {

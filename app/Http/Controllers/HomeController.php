@@ -34,7 +34,7 @@ class HomeController extends Controller
 
         $postsQuery = Post::with(['category', 'user'])
             ->published()
-            ->when($selectedCategory, fn ($query) => $query->where('category_id', $selectedCategory->id))
+            ->when($selectedCategory, fn ($query) => $query->whereIn('category_id', $selectedCategory->subtreeIds()))
             ->orderByRaw('COALESCE(published_at, created_at) desc');
 
         $posts = $postsQuery->get();
@@ -45,41 +45,42 @@ class HomeController extends Controller
         $heroStories = $storyBank->take(5)->values();
         $heroRail = $storyBank->slice(1, 4)->values();
         $featuredCards = $storyBank->slice(5, 4)->values();
-        $businessLead = $storyBank->slice(9, 1)->first() ?? $storyBank->first();
-        $businessStories = $storyBank->slice(10, 3)->values();
+        $categories = Category::active()->get();
+        $sectionStories = function (string $slug) use ($categories, $posts, $locale): Collection {
+            $category = $categories->firstWhere('slug', $slug);
+            if (! $category) {
+                return collect();
+            }
 
-        $sportsLead = $storyBank->slice(13, 1)->first() ?? $storyBank->first();
-        $worldLead = $storyBank->slice(17, 1)->first() ?? $storyBank->skip(1)->first();
-        $healthLead = $storyBank->slice(21, 1)->first() ?? $storyBank->skip(2)->first();
-        $cultureLead = $storyBank->slice(25, 1)->first() ?? $storyBank->skip(3)->first();
+            $ids = $category->subtreeIds($categories);
 
+            return $posts->filter(fn (Post $post) => in_array($post->category_id, $ids))
+                ->values()->map(fn (Post $post, int $index) => $this->decorateStory($post, $index, $locale));
+        };
+
+        $business = $sectionStories('business');
+        $businessLead = $business->first();
+        $businessStories = $business->skip(1)->take(3)->values();
         $editorialColumns = collect([
-            [
-                'title' => __('messages.sports'),
-                'lead' => $sportsLead,
-                'items' => $this->uniqueStorySlice($storyBank, 14, 6, $sportsLead['id'] ?? null),
-            ],
-            [
-                'title' => __('messages.world'),
-                'lead' => $worldLead,
-                'items' => $this->uniqueStorySlice($storyBank, 18, 6, $worldLead['id'] ?? null),
-            ],
-            [
-                'title' => __('messages.health'),
-                'lead' => $healthLead,
-                'items' => $this->uniqueStorySlice($storyBank, 22, 6, $healthLead['id'] ?? null),
-            ],
-            [
-                'title' => __('messages.art_culture'),
-                'lead' => $cultureLead,
-                'items' => $this->uniqueStorySlice($storyBank, 26, 6, $cultureLead['id'] ?? null),
-            ],
-        ]);
+            'sports' => 'sports',
+            'world' => 'world',
+            'health' => 'health',
+            'art-culture' => 'art_culture',
+        ])->map(function (string $label, string $slug) use ($sectionStories) {
+            $stories = $sectionStories($slug);
 
-        $opinionLead = $storyBank->slice(37, 1)->first() ?? $storyBank->first();
-        $opinionStories = $storyBank->slice(38, 3)->values();
-        $opinionSidebarLead = $storyBank->slice(41, 1)->first() ?? $storyBank->skip(1)->first();
-        $readMoreStories = $storyBank->slice(42, 5)->values();
+            return [
+                'title' => __('messages.'.$label),
+                'lead' => $stories->first(),
+                'items' => $stories->skip(1)->take(3)->values(),
+            ];
+        })->filter(fn (array $column) => $column['lead'] !== null)->values();
+
+        $opinions = $sectionStories('opinions');
+        $opinionLead = $opinions->first();
+        $opinionStories = $opinions->skip(1)->take(3)->values();
+        $opinionSidebarLead = $storyBank->first();
+        $readMoreStories = $storyBank->skip(1)->take(5)->values();
 
         $utilityStories = $storyBank->take(3)->values();
         $weather = $weatherService->current($locale);
@@ -311,17 +312,6 @@ class HomeController extends Controller
         }
 
         return $url;
-    }
-
-    private function uniqueStorySlice(Collection $storyBank, int $start, int $length, ?int $excludeId = null): Collection
-    {
-        return $storyBank
-            ->slice($start, $length)
-            ->filter(fn (array $story) => $excludeId === null || (int) data_get($story, 'id') !== $excludeId)
-            ->unique('id')
-            ->values()
-            ->take(3)
-            ->values();
     }
 
     private function buildVideoStories(string $locale): Collection

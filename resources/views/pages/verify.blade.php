@@ -16,6 +16,7 @@
                 </p>
             </div>
 
+            <a href="{{ route('certificates.verify', ['locale' => $locale]) }}" style="text-align:center;">{{ __('certificates.verify') }} →</a>
             @if ($errors->any())
                 <div style="border: 1px solid #f3c0c0; background:#fff7f7; color:#9f1239; padding: 14px 16px; font-size: 0.95rem;">
                     {{ $errors->first('code') }}

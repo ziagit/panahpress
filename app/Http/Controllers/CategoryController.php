@@ -46,13 +46,13 @@ class CategoryController extends Controller
         $locale = $this->setLocale($request);
         $category = $this->resolveCategory($category);
         $posts = Post::published()
-            ->where('category_id', $category->id)
+            ->whereIn('category_id', $category->subtreeIds())
             ->orderByRaw('COALESCE(published_at, created_at) desc')
             ->paginate(10)
             ->withQueryString();
 
         $latestPosts = Post::published()
-            ->where('category_id', $category->id)
+            ->whereIn('category_id', $category->subtreeIds())
             ->orderByRaw('COALESCE(published_at, created_at) desc')
             ->take(6)
             ->get();

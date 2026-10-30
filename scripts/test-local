@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+if php -r 'exit(extension_loaded("pdo_sqlite") ? 0 : 1);'; then
+    exec php vendor/bin/phpunit "$@"
+fi
+extension_dir="$PWD/storage/app/private/php-extensions"
+if [[ ! -f "$extension_dir/pdo_sqlite.so" ]]; then
+    echo 'PHP SQLite support is missing. Install the SQLite extension for your PHP version.' >&2
+    exit 1
+fi
+exec php -d "extension=$extension_dir/pdo_sqlite.so" -d "extension=$extension_dir/sqlite3.so" vendor/bin/phpunit "$@"

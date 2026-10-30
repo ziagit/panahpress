@@ -513,7 +513,9 @@
         ];
 
         if ($currentUser?->isAdmin()) {
+            $adminNav[] = ['label' => 'Banners', 'route' => 'admin.banners.index'];
             $adminNav[] = ['label' => __('messages.authors'), 'route' => 'admin.authors.index'];
+            $adminNav[] = ['label' => __('certificates.manage'), 'route' => 'admin.certificates.index'];
             $adminNav[] = ['label' => __('messages.verifications'), 'route' => 'admin.verifications.index'];
         }
 

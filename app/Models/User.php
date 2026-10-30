@@ -23,6 +23,8 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    protected $attributes = ['auto_approve_posts' => false];
+
     protected function casts(): array
     {
         return [

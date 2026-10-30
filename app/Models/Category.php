@@ -54,6 +54,23 @@ class Category extends Model
         return $this->hasMany(Post::class);
     }
 
+    /** Include active descendants while guarding against cyclic category data. */
+    public function subtreeIds(?\Illuminate\Support\Collection $categories = null): array
+    {
+        $categories ??= static::active()->get();
+        $ids = [$this->id];
+        do {
+            $previous = count($ids);
+            foreach ($categories as $category) {
+                if (in_array($category->parent_id, $ids) && ! in_array($category->id, $ids)) {
+                    $ids[] = $category->id;
+                }
+            }
+        } while (count($ids) > $previous);
+
+        return $ids;
+    }
+
     public function name(string $locale = null): string
     {
         $locale = $locale ?: AppFacade::getLocale();

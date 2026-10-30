@@ -250,7 +250,7 @@
                 </div>
             </div>
 
-            <div class="category-ad" aria-hidden="true"></div>
+            <div style="margin-top:24px"><x-banner placement="news" /></div>
         </aside>
     </section>
 @endsection
