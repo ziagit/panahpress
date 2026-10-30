@@ -501,6 +501,10 @@
             gap: 28px;
         }
 
+        .news-main--footer-spacing {
+            padding-bottom: 48px;
+        }
+
         .hero-grid {
             display: grid;
             grid-template-columns: minmax(0, 2.35fr) minmax(320px, 1fr);
@@ -2759,7 +2763,7 @@
         </div>
     </nav>
 
-    <main class="news-main">
+    <main class="news-main{{ request()->routeIs('home', 'categories.*') ? ' news-main--footer-spacing' : '' }}">
         @if (session('newsletter_success'))
             <div class="newsletter-flash">
                 <div class="newsletter-flash__message">

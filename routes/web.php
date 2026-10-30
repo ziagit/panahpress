@@ -239,6 +239,10 @@ Route::group([
     });
 
     Route::middleware(['auth', 'role:admin'])->group(function () {
+        Route::get('/admin/agreements', [\App\Http\Controllers\Admin\AgreementController::class, 'index'])->name('admin.agreements.index');
+        Route::post('/admin/agreements', [\App\Http\Controllers\Admin\AgreementController::class, 'store'])->name('admin.agreements.store');
+        Route::get('/admin/agreements/{agreement}/download', [\App\Http\Controllers\Admin\AgreementController::class, 'download'])->name('admin.agreements.download');
+
         Route::get('/admin/banners', [\App\Http\Controllers\Admin\BannerController::class, 'index'])->name('admin.banners.index');
         Route::put('/admin/banners/{placement}', [\App\Http\Controllers\Admin\BannerController::class, 'update'])->name('admin.banners.update');
 

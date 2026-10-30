@@ -18,7 +18,12 @@
             <img src="{{ route('certificates.image', ['locale' => $locale, 'token' => $certificate->verification_token]) }}" alt="{{ __('certificates.image') }}" style="max-width:220px;max-height:180px;object-fit:contain;">
         @endif
         <input type="hidden" name="is_revoked" value="0">
-        <div class="form-field"><label><input type="checkbox" name="is_revoked" value="1" @checked(old('is_revoked', $certificate?->is_revoked))> {{ __('certificates.is_revoked') }}</label></div>
+        <div style="margin-block:1rem;">
+            <label for="is_revoked" style="display:inline-flex;align-items:center;gap:.6rem;cursor:pointer;font-size:.95rem;font-weight:600;">
+                <input id="is_revoked" type="checkbox" name="is_revoked" value="1" style="width:1rem;height:1rem;margin:0;flex-shrink:0;accent-color:#0f172a;" @checked(old('is_revoked', $certificate?->is_revoked))>
+                <span>{{ __('certificates.is_revoked') }}</span>
+            </label>
+        </div>
         <button class="button" type="submit">{{ __('certificates.save') }}</button>
     </form>
     @if($certificate)
